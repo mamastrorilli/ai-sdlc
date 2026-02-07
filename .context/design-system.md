@@ -361,6 +361,85 @@ import { Button } from '@/design-system/atoms';
 </Button>
 ```
 
+#### Icon
+Wrapper standardizzato per icone Lucide React.
+
+**File**: `src/design-system/atoms/Icon/Icon.tsx`
+**Storybook**: `Atoms/Icon`
+**Libreria**: [Lucide React](https://lucide.dev/icons) - 1500+ icone tree-shakeable
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `icon` | `LucideIcon` | **required** | Componente icona Lucide |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Dimensione |
+| `label` | `string` | - | Label accessibilità (se omesso, icona decorativa) |
+
+**Dimensioni**:
+| Size | Pixel | Classe Tailwind |
+|------|-------|-----------------|
+| xs | 12px | `w-3 h-3` |
+| sm | 16px | `w-4 h-4` |
+| md | 20px | `w-5 h-5` |
+| lg | 24px | `w-6 h-6` |
+| xl | 32px | `w-8 h-8` |
+
+**Utilizzo**:
+```tsx
+import { Icon } from '@/design-system/atoms';
+import { ArrowRight, Search, CheckCircle } from 'lucide-react';
+
+// Icona decorativa (nascosta a screen reader)
+<Icon icon={ArrowRight} size="md" />
+
+// Icona con significato semantico
+<Icon icon={Search} size="lg" label="Cerca" />
+
+// Con colore personalizzato
+<Icon icon={CheckCircle} className="text-[var(--color-success-500)]" />
+```
+
+#### Link
+Componente link conforme UI Kit Italia.
+
+**File**: `src/design-system/atoms/Link/Link.tsx`
+**Storybook**: `Atoms/Link`
+**Figma**: [Link Component](https://www.figma.com/design/INVyTbc0CHHBiY8KPlcTR0/UI-Kit-Italia--Community-?node-id=1732-166401)
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `variant` | `'standalone' \| 'withArrow' \| 'withDownload'` | `'standalone'` | Variante visiva |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Dimensione |
+| `background` | `'light' \| 'dark'` | `'light'` | Sfondo su cui appare |
+| `icon` | `ReactNode` | - | Icona personalizzata |
+
+**Varianti**:
+- `standalone`: Solo testo, senza icona
+- `withArrow`: Con icona freccia a destra (→) - navigazione
+- `withDownload`: Con icona download a sinistra (↓) - scarica file
+
+**Background**:
+- `light`: Testo blu (#0066CC) su sfondo chiaro
+- `dark`: Testo bianco su sfondo scuro
+
+**Utilizzo**:
+```tsx
+import { Link } from '@/design-system/atoms';
+
+// Link standalone
+<Link href="/pagina">Testo del link</Link>
+
+// Link con freccia
+<Link variant="withArrow" href="/pagina">Scopri di più</Link>
+
+// Link download
+<Link variant="withDownload" href="/file.pdf">Scarica PDF</Link>
+
+// Link su sfondo scuro
+<Link background="dark" href="/pagina">Link chiaro</Link>
+```
+
 ### Molecules
 *Nessuna*
 

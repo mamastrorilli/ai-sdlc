@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { ArrowRight, Plus } from 'lucide-react';
 import { Button } from './Button';
+import { Icon } from '../Icon';
 
 /**
  * Il componente Button rappresenta l'elemento interattivo principale
@@ -192,38 +194,12 @@ export const FullWidth: Story = {
 // CON ICONE
 // ============================================
 
-const ArrowRightIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-    className="w-full h-full"
-  >
-    <path
-      fillRule="evenodd"
-      d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const PlusIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-    className="w-full h-full"
-  >
-    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-  </svg>
-);
-
 /**
  * Con icona a sinistra
  */
 export const WithIconLeft: Story = {
   args: {
-    iconLeft: <PlusIcon />,
+    iconLeft: <Icon icon={Plus} size="md" />,
     children: 'Aggiungi',
   },
 };
@@ -233,7 +209,7 @@ export const WithIconLeft: Story = {
  */
 export const WithIconRight: Story = {
   args: {
-    iconRight: <ArrowRightIcon />,
+    iconRight: <Icon icon={ArrowRight} size="md" />,
     children: 'Continua',
   },
 };
@@ -243,8 +219,8 @@ export const WithIconRight: Story = {
  */
 export const WithBothIcons: Story = {
   args: {
-    iconLeft: <PlusIcon />,
-    iconRight: <ArrowRightIcon />,
+    iconLeft: <Icon icon={Plus} size="md" />,
+    iconRight: <Icon icon={ArrowRight} size="md" />,
     children: 'Azione',
   },
 };
@@ -319,9 +295,9 @@ export const Showcase: Story = {
       <div>
         <h3 className="text-lg font-semibold mb-4">Con icone</h3>
         <div className="flex flex-wrap gap-4 items-center">
-          <Button iconLeft={<PlusIcon />}>Aggiungi</Button>
-          <Button iconRight={<ArrowRightIcon />}>Continua</Button>
-          <Button iconLeft={<PlusIcon />} iconRight={<ArrowRightIcon />}>
+          <Button iconLeft={<Icon icon={Plus} size="md" />}>Aggiungi</Button>
+          <Button iconRight={<Icon icon={ArrowRight} size="md" />}>Continua</Button>
+          <Button iconLeft={<Icon icon={Plus} size="md" />} iconRight={<Icon icon={ArrowRight} size="md" />}>
             Entrambe
           </Button>
         </div>
@@ -330,10 +306,10 @@ export const Showcase: Story = {
       <div>
         <h3 className="text-lg font-semibold mb-4">Secondary con icone</h3>
         <div className="flex flex-wrap gap-4 items-center">
-          <Button variant="secondary" iconLeft={<PlusIcon />}>
+          <Button variant="secondary" iconLeft={<Icon icon={Plus} size="md" />}>
             Aggiungi
           </Button>
-          <Button variant="secondary" iconRight={<ArrowRightIcon />}>
+          <Button variant="secondary" iconRight={<Icon icon={ArrowRight} size="md" />}>
             Continua
           </Button>
         </div>

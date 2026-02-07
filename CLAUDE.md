@@ -125,6 +125,46 @@ import { Button } from '@/design-system/atoms';
 <Button variant="primary">Azione</Button>
 ```
 
+#### Icon
+`src/design-system/atoms/Icon/`
+
+Wrapper per icone **Lucide React** con sizing e accessibilità standardizzati.
+
+| Prop | Tipo | Default |
+|------|------|---------|
+| `icon` | `LucideIcon` | **required** |
+| `size` | `xs \| sm \| md \| lg \| xl` | `md` |
+| `label` | `string` | - |
+
+**Dimensioni**: xs=12px, sm=16px, md=20px, lg=24px, xl=32px
+
+```tsx
+import { Icon } from '@/design-system/atoms';
+import { ArrowRight, Search, Download } from 'lucide-react';
+
+<Icon icon={ArrowRight} size="md" />
+<Icon icon={Search} size="lg" label="Cerca" />
+<Icon icon={Download} className="text-primary-500" />
+```
+
+Catalogo icone: [lucide.dev/icons](https://lucide.dev/icons)
+
+#### Link
+`src/design-system/atoms/Link/`
+
+| Prop | Tipo | Default |
+|------|------|---------|
+| `variant` | `standalone \| withArrow \| withDownload` | `standalone` |
+| `size` | `sm \| md \| lg` | `md` |
+| `background` | `light \| dark` | `light` |
+| `icon` | `ReactNode` | - |
+
+```tsx
+import { Link } from '@/design-system/atoms';
+<Link variant="withArrow" href="/pagina">Scopri di più</Link>
+<Link variant="withDownload" href="/file.pdf">Scarica PDF</Link>
+```
+
 ### Organisms
 
 #### Hero
