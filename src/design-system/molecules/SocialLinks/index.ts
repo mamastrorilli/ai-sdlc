@@ -1,2 +1,1 @@
-export { LinkGroup, type LinkGroupProps, type LinkGroupItem } from './LinkGroup';
 export { SocialLinks, type SocialLinksProps, type SocialLinkItem } from './SocialLinks';

@@ -496,10 +496,167 @@ import { Accordion } from '@/design-system/atoms';
 />
 ```
 
+#### Divider
+Linea separatrice per dividere sezioni di contenuto.
+
+**File**: `src/design-system/atoms/Divider/Divider.tsx`
+**Storybook**: `Atoms/Divider`
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Orientamento |
+| `variant` | `'solid' \| 'dashed' \| 'dotted'` | `'solid'` | Stile linea |
+| `spacing` | `'none' \| 'sm' \| 'md' \| 'lg'` | `'md'` | Spazio attorno |
+| `color` | `'light' \| 'medium' \| 'dark'` | `'light'` | Colore linea |
+
+**Utilizzo**:
+```tsx
+import { Divider } from '@/design-system/atoms';
+
+<Divider />
+<Divider variant="dashed" spacing="lg" />
+<Divider orientation="vertical" />
+```
+
+#### Logo
+Brand identity per il Design System.
+
+**File**: `src/design-system/atoms/Logo/Logo.tsx`
+**Storybook**: `Atoms/Logo`
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `variant` | `'full' \| 'compact' \| 'mono'` | `'full'` | Variante logo |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Dimensione |
+| `color` | `'light' \| 'dark'` | - | Colore forzato |
+
+**Varianti**:
+- `full`: Logo completo con simbolo + testo "SDLC"
+- `compact`: Solo simbolo "AI"
+- `mono`: Versione monocromatica
+
+**Utilizzo**:
+```tsx
+import { Logo } from '@/design-system/atoms';
+
+<Logo variant="full" size="md" />
+<Logo variant="compact" color="light" /> // Su sfondo scuro
+```
+
 ### Molecules
-*Nessuna*
+
+#### LinkGroup
+Gruppo di link con titolo opzionale, usato tipicamente nei footer.
+
+**File**: `src/design-system/molecules/LinkGroup/LinkGroup.tsx`
+**Storybook**: `Molecules/LinkGroup`
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `title` | `string` | - | Titolo gruppo |
+| `links` | `LinkGroupItem[]` | **required** | Array di link |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout |
+| `variant` | `'light' \| 'dark'` | `'light'` | Sfondo |
+
+**LinkGroupItem**:
+| Campo | Tipo | Descrizione |
+|-------|------|-------------|
+| `label` | `string` | Testo link (required) |
+| `href` | `string` | URL (required) |
+| `external` | `boolean` | Link esterno |
+| `icon` | `ReactNode` | Icona opzionale |
+
+**Utilizzo**:
+```tsx
+import { LinkGroup } from '@/design-system/molecules';
+
+<LinkGroup
+  title="Risorse"
+  links={[
+    { label: 'Docs', href: '/docs' },
+    { label: 'GitHub', href: 'https://github.com', external: true },
+  ]}
+/>
+```
+
+#### SocialLinks
+Icone social con link, usato tipicamente nei footer.
+
+**File**: `src/design-system/molecules/SocialLinks/SocialLinks.tsx`
+**Storybook**: `Molecules/SocialLinks`
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `links` | `SocialLinkItem[]` | **required** | Array di social |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Dimensione icone |
+| `variant` | `'light' \| 'dark'` | `'light'` | Sfondo |
+
+**SocialLinkItem**:
+| Campo | Tipo | Descrizione |
+|-------|------|-------------|
+| `name` | `string` | Nome per aria-label (required) |
+| `href` | `string` | URL (required) |
+| `icon` | `LucideIcon` | Icona Lucide (required) |
+
+**Utilizzo**:
+```tsx
+import { SocialLinks } from '@/design-system/molecules';
+import { Github, Linkedin } from 'lucide-react';
+
+<SocialLinks
+  links={[
+    { name: 'GitHub', href: 'https://github.com', icon: Github },
+    { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
+  ]}
+/>
+```
 
 ### Organisms
+
+#### Footer
+Footer responsive con logo, gruppi di link, social e copyright.
+
+**File**: `src/design-system/organisms/Footer/Footer.tsx`
+**Storybook**: `Organisms/Footer`
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `logo` | `LogoProps` | - | Configurazione logo |
+| `description` | `string` | - | Descrizione sotto logo |
+| `columns` | `FooterColumn[]` | `[]` | Colonne di link |
+| `socialLinks` | `SocialLinkItem[]` | `[]` | Link social |
+| `copyright` | `string` | - | Testo copyright |
+| `bottomContent` | `ReactNode` | - | Contenuto aggiuntivo |
+| `variant` | `'light' \| 'dark'` | `'dark'` | Colore sfondo |
+
+**FooterColumn**:
+| Campo | Tipo | Descrizione |
+|-------|------|-------------|
+| `title` | `string` | Titolo colonna (required) |
+| `links` | `LinkGroupItem[]` | Array di link (required) |
+
+**Utilizzo**:
+```tsx
+import { Footer } from '@/design-system/organisms';
+import { Github, Linkedin } from 'lucide-react';
+
+<Footer
+  description="Design System moderno"
+  columns={[
+    { title: 'Risorse', links: [{ label: 'Docs', href: '/docs' }] },
+    { title: 'Progetto', links: [{ label: 'GitHub', href: 'https://github.com', external: true }] },
+  ]}
+  socialLinks={[
+    { name: 'GitHub', href: 'https://github.com', icon: Github },
+  ]}
+  copyright="© 2024 AI SDLC"
+/>
+```
 
 #### Hero
 Sezione hero per landing page e pagine principali.

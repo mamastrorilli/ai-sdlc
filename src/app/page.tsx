@@ -1,7 +1,10 @@
 'use client';
 
-import { Hero } from '@/design-system/organisms';
+import { Github, Linkedin, BookOpen, FileCode } from 'lucide-react';
+import { Hero, Footer } from '@/design-system/organisms';
 import { Accordion, type AccordionItemData } from '@/design-system/atoms';
+import type { FooterColumn } from '@/design-system/organisms';
+import type { SocialLinkItem } from '@/design-system/molecules';
 
 const faqItems: AccordionItemData[] = [
   {
@@ -198,6 +201,43 @@ const faqItems: AccordionItemData[] = [
   },
 ];
 
+const STORYBOOK_URL = 'https://mamastrorilli.github.io/ai-sdlc/';
+const GITHUB_URL = 'https://github.com/mamastrorilli/ai-sdlc';
+
+const footerColumns: FooterColumn[] = [
+  {
+    title: 'Risorse',
+    links: [
+      { label: 'Storybook', href: STORYBOOK_URL, external: true },
+      { label: 'Documentazione', href: '/docs' },
+      { label: 'Componenti', href: '/components' },
+    ],
+  },
+  {
+    title: 'Progetto',
+    links: [
+      { label: 'GitHub', href: GITHUB_URL, external: true },
+      { label: 'Changelog', href: '/changelog' },
+      { label: 'Roadmap', href: '/roadmap' },
+    ],
+  },
+  {
+    title: 'Sviluppo',
+    links: [
+      { label: 'Getting Started', href: '/docs/getting-started' },
+      { label: 'Contributing', href: '/docs/contributing' },
+      { label: 'Design Tokens', href: '/docs/tokens' },
+    ],
+  },
+];
+
+const socialLinks: SocialLinkItem[] = [
+  { name: 'GitHub', href: GITHUB_URL, icon: Github },
+  { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
+  { name: 'Storybook', href: STORYBOOK_URL, icon: BookOpen },
+  { name: 'Figma', href: 'https://figma.com', icon: FileCode },
+];
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
@@ -210,8 +250,8 @@ export default function Home() {
         title="AI SDLC"
         subtitle="Un Design System moderno costruito con AI-assisted development. Integrazione Figma, componenti accessibili e pipeline CI/CD automatizzata."
         actions={[
-          { label: 'Storybook', href: '/storybook' },
-          { label: 'GitHub', href: 'https://github.com' },
+          { label: 'Storybook', href: STORYBOOK_URL },
+          { label: 'GitHub', href: GITHUB_URL },
         ]}
       />
 
@@ -234,13 +274,12 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[var(--color-neutral-900)] text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm text-neutral-400">
-            AI SDLC Design System — Built with Next.js, Tailwind CSS &amp; Claude Code
-          </p>
-        </div>
-      </footer>
+      <Footer
+        description="Design System moderno costruito con AI-assisted development. Basato su UI Kit Italia per garantire accessibilità e coerenza visiva."
+        columns={footerColumns}
+        socialLinks={socialLinks}
+        copyright="© 2024 AI SDLC Design System — Built with Next.js, Tailwind CSS & Claude Code"
+      />
     </div>
   );
 }
