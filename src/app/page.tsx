@@ -1,65 +1,246 @@
-import Image from "next/image";
+'use client';
+
+import { Hero } from '@/design-system/organisms';
+import { Accordion, type AccordionItemData } from '@/design-system/atoms';
+
+const faqItems: AccordionItemData[] = [
+  {
+    id: 'design-system',
+    title: 'Design System con Atomic Design',
+    content: (
+      <div className="space-y-3">
+        <p>
+          Il progetto implementa un Design System basato sulla metodologia{' '}
+          <strong>Atomic Design</strong>, organizzando i componenti in livelli:
+        </p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>
+            <strong>Atoms</strong>: Button, Icon, Link, Accordion
+          </li>
+          <li>
+            <strong>Organisms</strong>: Hero
+          </li>
+        </ul>
+        <p>
+          I componenti seguono le linee guida del{' '}
+          <strong>UI Kit Italia</strong> per garantire accessibilità e coerenza
+          visiva.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'design-tokens',
+    title: 'Design Tokens (UI Kit Italia)',
+    content: (
+      <div className="space-y-3">
+        <p>
+          I token di design sono estratti dal{' '}
+          <strong>Figma UI Kit Italia</strong> e includono:
+        </p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>
+            <strong>Colors</strong>: Primary (#0066CC), Accent, Success,
+            Warning, Error, Info, Neutral
+          </li>
+          <li>
+            <strong>Typography</strong>: Font Titillium Web con scale tipografiche
+            standardizzate
+          </li>
+          <li>
+            <strong>Spacing</strong>: Sistema basato su unità di 4px
+          </li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: 'storybook',
+    title: 'Storybook con Play Functions',
+    content: (
+      <div className="space-y-3">
+        <p>
+          Ogni componente ha una <strong>story Storybook</strong> con:
+        </p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>Varianti principali documentate</li>
+          <li>
+            <strong>Play functions</strong> per test di interazione automatizzati
+          </li>
+          <li>Test di accessibilità integrati con axe-core</li>
+        </ul>
+        <p>
+          Comando: <code className="bg-neutral-100 px-2 py-1 rounded">yarn storybook</code>
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'ci-cd',
+    title: 'CI/CD con GitHub Actions',
+    content: (
+      <div className="space-y-3">
+        <p>
+          Pipeline automatizzata su ogni push/PR verso <strong>main</strong>:
+        </p>
+        <ol className="list-decimal list-inside space-y-1 ml-2">
+          <li>Install dependencies con yarn</li>
+          <li>Build Storybook statico</li>
+          <li>Test accessibilità (WCAG 2.1 AA) con axe-core</li>
+          <li>Lighthouse CI per performance e accessibility score</li>
+          <li>Deploy automatico su GitHub Pages</li>
+        </ol>
+      </div>
+    ),
+  },
+  {
+    id: 'lighthouse',
+    title: 'Lighthouse CI con Soglie',
+    content: (
+      <div className="space-y-3">
+        <p>
+          Controlli automatici di qualità con <strong>Lighthouse CI</strong>:
+        </p>
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left py-2">Metrica</th>
+              <th className="text-left py-2">Soglia</th>
+              <th className="text-left py-2">Livello</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b">
+              <td className="py-2">Performance</td>
+              <td className="py-2">&gt;= 90%</td>
+              <td className="py-2">Warning</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2">Accessibility</td>
+              <td className="py-2">&gt;= 95%</td>
+              <td className="py-2 text-red-600 font-semibold">Blocca</td>
+            </tr>
+            <tr>
+              <td className="py-2">Best Practices</td>
+              <td className="py-2">&gt;= 90%</td>
+              <td className="py-2">Warning</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    ),
+  },
+  {
+    id: 'figma-workflow',
+    title: 'Figma MCP Workflow',
+    content: (
+      <div className="space-y-3">
+        <p>
+          Integrazione <strong>Figma Dev Mode → Claude Code</strong>:
+        </p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>Estrazione automatica di componenti da Figma</li>
+          <li>Generazione di codice React + TypeScript</li>
+          <li>Auto-update della documentazione (CLAUDE.md, design-system.md)</li>
+          <li>Creazione automatica di Storybook stories</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: 'accessibility',
+    title: 'Accessibilità (WCAG 2.1 AA)',
+    content: (
+      <div className="space-y-3">
+        <p>
+          L&apos;accessibilità è una priorità core del progetto:
+        </p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>Test automatici con axe-core su ogni componente</li>
+          <li>Soglia Lighthouse Accessibility al 95% (bloccante)</li>
+          <li>Focus management e keyboard navigation</li>
+          <li>ARIA attributes e semantic HTML</li>
+          <li>Contrasto colori conforme WCAG AA</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: 'tech-stack',
+    title: 'Stack Tecnologico',
+    content: (
+      <div className="space-y-3">
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>
+            <strong>Framework</strong>: Next.js 14 (App Router)
+          </li>
+          <li>
+            <strong>Linguaggio</strong>: TypeScript
+          </li>
+          <li>
+            <strong>Styling</strong>: Tailwind CSS
+          </li>
+          <li>
+            <strong>Icons</strong>: Lucide React
+          </li>
+          <li>
+            <strong>Documentation</strong>: Storybook 8
+          </li>
+          <li>
+            <strong>Package Manager</strong>: Yarn
+          </li>
+          <li>
+            <strong>CI/CD</strong>: GitHub Actions
+          </li>
+        </ul>
+      </div>
+    ),
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <Hero
+        variant="default"
+        size="lg"
+        background="primary"
+        kicker="Design System"
+        title="AI SDLC"
+        subtitle="Un Design System moderno costruito con AI-assisted development. Integrazione Figma, componenti accessibili e pipeline CI/CD automatizzata."
+        actions={[
+          { label: 'Storybook', href: '/storybook' },
+          { label: 'GitHub', href: 'https://github.com' },
+        ]}
+      />
+
+      {/* FAQ Section */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[var(--color-neutral-900)]">
+            Cosa è stato implementato
+          </h2>
+          <p className="text-lg text-center text-[var(--color-neutral-600)] mb-12">
+            Scopri tutte le funzionalità e tecnologie del progetto
+          </p>
+
+          <Accordion
+            variant="activeBackground"
+            items={faqItems}
+            allowMultiple
+          />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[var(--color-neutral-900)] text-white py-8">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-sm text-neutral-400">
+            AI SDLC Design System — Built with Next.js, Tailwind CSS &amp; Claude Code
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }
