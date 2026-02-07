@@ -440,6 +440,62 @@ import { Link } from '@/design-system/atoms';
 <Link background="dark" href="/pagina">Link chiaro</Link>
 ```
 
+#### Accordion
+Componente per mostrare/nascondere contenuti in sezioni espandibili.
+
+**File**: `src/design-system/atoms/Accordion/Accordion.tsx`
+**Storybook**: `Atoms/Accordion`
+**Figma**: [Accordion Component](https://www.figma.com/design/INVyTbc0CHHBiY8KPlcTR0/UI-Kit-Italia--Community-?node-id=1205-68590)
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `items` | `AccordionItemData[]` | **required** | Array di items |
+| `variant` | `'basic' \| 'leftIcon' \| 'activeBackground'` | `'basic'` | Variante visiva |
+| `defaultExpandedIds` | `string[]` | `[]` | IDs items espansi inizialmente |
+| `allowMultiple` | `boolean` | `false` | Permette apertura multipla |
+
+**AccordionItemData**:
+| Campo | Tipo | Descrizione |
+|-------|------|-------------|
+| `id` | `string` | ID univoco (required) |
+| `title` | `string` | Titolo header (required) |
+| `content` | `ReactNode` | Contenuto espandibile (required) |
+| `disabled` | `boolean` | Item disabilitato |
+
+**Varianti**:
+- `basic`: Header con testo neutro e chevron a destra
+- `leftIcon`: Icona +/- a sinistra con testo primary blu
+- `activeBackground`: Header con sfondo primary quando espanso
+
+**Utilizzo**:
+```tsx
+import { Accordion } from '@/design-system/atoms';
+
+// Basic
+<Accordion
+  variant="basic"
+  items={[
+    { id: '1', title: 'Sezione 1', content: <p>Contenuto</p> },
+    { id: '2', title: 'Sezione 2', content: <p>Contenuto</p> },
+  ]}
+/>
+
+// Con sfondo attivo
+<Accordion
+  variant="activeBackground"
+  items={items}
+  defaultExpandedIds={['1']}
+/>
+
+// Apertura multipla con icona sinistra
+<Accordion
+  variant="leftIcon"
+  items={items}
+  allowMultiple
+/>
+```
+
 ### Molecules
 *Nessuna*
 

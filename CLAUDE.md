@@ -165,6 +165,42 @@ import { Link } from '@/design-system/atoms';
 <Link variant="withDownload" href="/file.pdf">Scarica PDF</Link>
 ```
 
+#### Accordion
+`src/design-system/atoms/Accordion/`
+
+Componente per mostrare/nascondere contenuti in sezioni espandibili.
+
+| Prop | Tipo | Default |
+|------|------|---------|
+| `items` | `AccordionItemData[]` | **required** |
+| `variant` | `basic \| leftIcon \| activeBackground` | `basic` |
+| `defaultExpandedIds` | `string[]` | `[]` |
+| `allowMultiple` | `boolean` | `false` |
+
+**AccordionItemData**:
+- `id`: string (required)
+- `title`: string (required)
+- `content`: ReactNode (required)
+- `disabled`: boolean
+
+```tsx
+import { Accordion } from '@/design-system/atoms';
+
+<Accordion
+  variant="basic"
+  items={[
+    { id: '1', title: 'Sezione 1', content: <p>Contenuto</p> },
+    { id: '2', title: 'Sezione 2', content: <p>Contenuto</p> },
+  ]}
+/>
+
+// Con sfondo attivo
+<Accordion variant="activeBackground" items={items} defaultExpandedIds={['1']} />
+
+// Apertura multipla
+<Accordion variant="leftIcon" items={items} allowMultiple />
+```
+
 ### Organisms
 
 #### Hero
