@@ -52,8 +52,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement | HT
  */
 const baseStyles = [
   'inline-flex items-center justify-center gap-2',
-  'font-semibold transition-all duration-200',
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
+  'font-semibold transition-colors duration-200',
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:transition-none',
   'disabled:cursor-not-allowed disabled:opacity-50',
   'select-none whitespace-nowrap',
 ].join(' ');
@@ -66,7 +66,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     'bg-[var(--color-primary-500)] text-white',
     'hover:bg-[var(--color-primary-600)]',
     'active:bg-[var(--color-primary-700)]',
-    'focus-visible:outline-[var(--color-primary-500)]',
+    'focus-visible:ring-[var(--color-primary-500)] focus-visible:ring-offset-white',
   ].join(' '),
 
   secondary: [
@@ -74,48 +74,48 @@ const variantStyles: Record<ButtonVariant, string> = {
     'border-2 border-[var(--color-primary-500)]',
     'hover:bg-[var(--color-primary-50)]',
     'active:bg-[var(--color-primary-100)]',
-    'focus-visible:outline-[var(--color-primary-500)]',
+    'focus-visible:ring-[var(--color-primary-500)] focus-visible:ring-offset-white',
   ].join(' '),
 
   tertiary: [
     'bg-transparent text-[var(--color-primary-500)]',
     'hover:bg-[var(--color-primary-50)]',
     'active:bg-[var(--color-primary-100)]',
-    'focus-visible:outline-[var(--color-primary-500)]',
+    'focus-visible:ring-[var(--color-primary-500)] focus-visible:ring-offset-white',
   ].join(' '),
 
   danger: [
     'bg-[var(--color-error-500)] text-white',
     'hover:bg-[var(--color-error-600)]',
     'active:bg-[var(--color-error-700)]',
-    'focus-visible:outline-[var(--color-error-500)]',
+    'focus-visible:ring-[var(--color-error-500)] focus-visible:ring-offset-white',
   ].join(' '),
 
   link: [
     'bg-transparent text-[var(--color-primary-500)] underline underline-offset-2',
     'hover:text-[var(--color-primary-700)]',
     'active:text-[var(--color-primary-800)]',
-    'focus-visible:outline-[var(--color-primary-500)]',
+    'focus-visible:ring-[var(--color-primary-500)] focus-visible:ring-offset-white',
     'p-0', // Reset padding for link style
   ].join(' '),
 
   primaryInverted: [
     'bg-white text-[var(--color-primary-500)]',
     'hover:bg-[var(--color-neutral-100)]',
-    'focus-visible:outline-white',
+    'focus-visible:ring-white focus-visible:ring-offset-[var(--color-primary-500)]',
   ].join(' '),
 
   secondaryInverted: [
     'bg-transparent text-white',
     'border-2 border-white',
     'hover:bg-white/10',
-    'focus-visible:outline-white',
+    'focus-visible:ring-white focus-visible:ring-offset-[var(--color-primary-500)]',
   ].join(' '),
 
   tertiaryInverted: [
     'bg-transparent text-white/90',
     'hover:text-white hover:bg-white/10',
-    'focus-visible:outline-white',
+    'focus-visible:ring-white focus-visible:ring-offset-[var(--color-primary-500)]',
   ].join(' '),
 };
 
