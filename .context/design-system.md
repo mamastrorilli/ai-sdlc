@@ -426,9 +426,12 @@ import { Hero } from '@/design-system/organisms';
 ## Regole di Implementazione
 
 1. **Utilizzare esclusivamente i token definiti** - Non hardcodare valori HEX.
-2. **Seguire pattern di accessibilità ARIA** - Contrasto minimo WCAG AA.
+2. **Seguire pattern di accessibilita ARIA** - Contrasto minimo WCAG AA.
 3. **Ogni componente deve avere una Story dedicata** con varianti e play function.
 4. **Dark mode automatico** - Usare i token semantici che si adattano.
+5. **Landmark accessibili** - Ogni `<section>` deve avere `aria-labelledby` che punta al suo heading.
+6. **Contrasto testo** - Non usare opacita ridotte (`text-white/80`, `text-white/90`) su sfondi colorati. Usare `text-white` pieno per garantire contrasto WCAG AA.
+7. **Lighthouse CI** - Ogni componente deve superare accessibility score >= 0.95 (configurato in `lighthouserc.js`).
 
 ## Utilizzo in Codice
 

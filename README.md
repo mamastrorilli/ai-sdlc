@@ -3,7 +3,7 @@
 Questo repository è un ambiente pre-configurato per lo sviluppo di un Design System moderno, integrato con **Figma Dev Mode (via MCP)** e ottimizzato per workflow guidati dall'Intelligenza Artificiale (Claude Code).
 
 ## 🚀 Stack Tecnologico
-- **Framework**: Next.js 15+ (App Router, React 19)
+- **Framework**: Next.js 16+ (App Router, React 19)
 - **Styling**: Tailwind CSS v4
 - **Linguaggio**: TypeScript
 - **Documentazione & Testing**: Storybook 10 + Playwright + Vitest
@@ -22,13 +22,13 @@ Organizzata sotto `src/design-system/` con la seguente struttura:
 - **Barrel Strategy**: Ogni cartella contiene un `index.ts` per export puliti, facilitando l'auto-import da parte dell'AI.
 
 ### 2. Storybook & Quality Pipeline
-- **Storybook 10**: Configurato per Next.js 15 e Tailwind v4. Supporta nativamente le `Play functions` per il testing delle interazioni.
+- **Storybook 10**: Configurato per Next.js 16 e Tailwind v4. Supporta nativamente le `Play functions` per il testing delle interazioni.
 - **CI/CD Quality Gates**:
-  - `npm run lint`: ESLint con regole Next.js e Storybook.
-  - `npm run check`: Validazione tipi TypeScript.
-  - `npm run test`: Unit testing con Vitest.
-  - `npm run test-storybook`: Test runner per le interazioni UI.
-  - `npm run format`: Prettier per la consistenza del codice.
+  - `yarn lint`: ESLint con regole Next.js e Storybook.
+  - `yarn check`: Validazione tipi TypeScript.
+  - `yarn test`: Unit testing con Vitest.
+  - `yarn test-storybook`: Test runner per le interazioni UI.
+  - `yarn format`: Prettier per la consistenza del codice.
 
 ### 3. Infrastruttura "AI Context" (VIVO)
 È stato creato un sistema di file per istruire Claude Code e altri modelli AI su come operare:
@@ -49,9 +49,41 @@ Il progetto è progettato per questo flusso di lavoro:
 
 ---
 
+## 🔄 CI/CD Pipeline (GitHub Actions)
+
+Il workflow `.github/workflows/storybook-tests.yml` si attiva su ogni push/PR verso `main`:
+
+```
+Push/PR → Install → Build Storybook → Test A11y → Lighthouse CI → Deploy (GitHub Pages)
+```
+
+### Cosa fa
+1. **Build Storybook** — genera la build statica
+2. **Test accessibilita** — axe-core via `@storybook/test-runner` (WCAG 2.1 AA)
+3. **Lighthouse CI** — performance, accessibility, best practices
+4. **Deploy** — pubblica su GitHub Pages (solo push su main, dopo che tutti i test passano)
+
+### Notifiche automatiche
+Se Lighthouse CI rileva problemi, viene creato un **commento sul commit** GitHub con:
+- Link ai report Lighthouse (consultabili per 7 giorni)
+- Link diretto al workflow run
+
+L'autore del commit riceve la notifica automaticamente.
+
+### Soglie Lighthouse (`lighthouserc.js`)
+| Metrica | Soglia | Effetto |
+|---------|--------|---------|
+| Performance | >= 0.9 | Warning (non blocca) |
+| **Accessibility** | **>= 0.95** | **Error (blocca il deploy)** |
+| Best Practices | >= 0.9 | Warning (non blocca) |
+
+---
+
 ## 📦 Script Disponibili
-- `npm run dev`: Avvia l'app Next.js.
-- `npm run storybook`: Avvia l'ambiente di documentazione a http://localhost:6006.
-- `npm run build-storybook`: Build statico di Storybook.
-- `npm run test-storybook`: Esegue i test funzionali sulle stories.
-- `npm run lint` / `npm run check`: Controlli di qualità.
+- `yarn dev`: Avvia l'app Next.js.
+- `yarn storybook`: Avvia l'ambiente di documentazione a http://localhost:6006.
+- `yarn build-storybook`: Build statico di Storybook.
+- `yarn test-storybook`: Esegue i test funzionali sulle stories.
+- `yarn test-storybook:ci`: Test in CI (avvia server + test runner).
+- `yarn lhci`: Esegue Lighthouse CI localmente.
+- `yarn lint` / `yarn check`: Controlli di qualita.

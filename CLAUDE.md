@@ -21,10 +21,38 @@ Figma Dev Mode → Claude Code → React component → auto-update docs
 - `skills/design-rules`: design system conventions
 
 ## SVILUPPO
-- Comando dev: `npm run dev`
-- Storybook: `npm run storybook`
-- Lint: `npm run lint`
-- Test: `npm run test` (quando configurato)
+- Package manager: **Yarn** (non usare npm)
+- Comando dev: `yarn dev`
+- Storybook: `yarn storybook`
+- Lint: `yarn lint`
+- Test: `yarn test`
+- Build Storybook: `yarn build-storybook`
+- Test Storybook (CI): `yarn test-storybook:ci`
+- Lighthouse CI: `yarn lhci`
+
+## CI/CD (GitHub Actions)
+
+Workflow: `.github/workflows/storybook-tests.yml`
+
+### Pipeline (su push/PR verso main)
+1. **Install** — `yarn install --frozen-lockfile` (Node 20)
+2. **Build Storybook** — genera build statico
+3. **Test a11y** — test-runner con axe-core (WCAG 2.1 AA)
+4. **Lighthouse CI** — performance + accessibility score
+5. **Deploy** — GitHub Pages (solo push su main, dopo test ok)
+
+### Notifiche
+Se Lighthouse CI fallisce, viene aggiunto automaticamente un **commento sul commit** con:
+- Link ai report Lighthouse (temporary-public-storage, 7 giorni)
+- Link al workflow run
+- L'autore del commit riceve notifica GitHub
+
+### Soglie Lighthouse (lighthouserc.js)
+| Metrica | Soglia | Livello |
+|---------|--------|---------|
+| Performance | >= 0.9 | warning |
+| Accessibility | >= 0.95 | **error** (blocca) |
+| Best Practices | >= 0.9 | warning |
 
 ## DESIGN TOKENS
 

@@ -11,7 +11,7 @@
  * @see https://www.figma.com/design/INVyTbc0CHHBiY8KPlcTR0/UI-Kit-Italia--Community-
  */
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import Image from 'next/image';
 import { Button, type ButtonProps } from '../../atoms/Button';
 
@@ -131,6 +131,7 @@ export function Hero({
   children,
   className = '',
 }: HeroProps) {
+  const titleId = useId();
   const alignment = variant === 'left' || variant === 'withImage' ? 'left' : 'center';
 
   // Contenuto testuale
@@ -145,7 +146,7 @@ export function Hero({
         <span
           className={`text-sm md:text-base font-semibold uppercase tracking-wider ${
             background === 'primary' || background === 'dark'
-              ? 'text-white/80'
+              ? 'text-white'
               : 'text-[var(--color-primary-500)]'
           }`}
         >
@@ -155,6 +156,7 @@ export function Hero({
 
       {/* Title */}
       <h1
+        id={titleId}
         className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight ${
           size === 'lg' ? 'lg:text-6xl' : ''
         }`}
@@ -167,7 +169,7 @@ export function Hero({
         <p
           className={`text-lg md:text-xl lg:text-2xl leading-relaxed ${
             background === 'primary' || background === 'dark'
-              ? 'text-white/90'
+              ? 'text-white'
               : 'text-[var(--color-neutral-600)]'
           } ${variant === 'withImage' ? '' : 'max-w-2xl'} ${
             alignment === 'center' ? 'mx-auto' : ''
@@ -212,6 +214,7 @@ export function Hero({
   if (variant === 'withImage') {
     return (
       <section
+        aria-labelledby={titleId}
         className={`${backgroundStyles[background]} ${sizeStyles[size]} ${className}`}
       >
         <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
@@ -244,6 +247,7 @@ export function Hero({
   if (variant === 'fullImage') {
     return (
       <section
+        aria-labelledby={titleId}
         className={`relative ${sizeStyles[size]} ${className}`}
         style={{
           backgroundImage: imageUrl ? `url(${imageUrl})` : undefined,
@@ -265,6 +269,7 @@ export function Hero({
   // Variante default e left
   return (
     <section
+      aria-labelledby={titleId}
       className={`${backgroundStyles[background]} ${sizeStyles[size]} ${className}`}
     >
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
