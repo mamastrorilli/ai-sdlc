@@ -36,31 +36,31 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
+          cache: yarn
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       # Playwright e' necessario per @storybook/test-runner
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: yarn build-storybook
         env:
           CI: true
 
       # Test di accessibilita' con @storybook/test-runner
       # Usa axe-core per validare WCAG 2.1 AA compliance
       - name: Run accessibility tests
-        run: npm run test-storybook:ci
+        run: yarn test-storybook:ci
         env:
           CI: true
 
       # Lighthouse CI per metriche di performance
       # I risultati sono caricati su temporary-public-storage (link nel log)
       - name: Run Lighthouse CI
-        run: npm run lhci
+        run: yarn lhci
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
