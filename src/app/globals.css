@@ -1,0 +1,463 @@
+@import "tailwindcss";
+
+/**
+ * UI Kit Italia - Design Tokens CSS
+ * Integrazione con Tailwind CSS v4
+ */
+
+:root {
+  /* Primary - Blu Italia */
+  --color-primary-50: #E6F0FA;
+  --color-primary-100: #B3D4F1;
+  --color-primary-200: #80B8E8;
+  --color-primary-300: #4D9CDF;
+  --color-primary-400: #1A80D6;
+  --color-primary-500: #0066CC;
+  --color-primary-600: #0059B3;
+  --color-primary-700: #004D99;
+  --color-primary-800: #004080;
+  --color-primary-900: #003366;
+  --color-primary-950: #001A33;
+
+  /* Accent - Teal */
+  --color-accent-50: #E6F7F7;
+  --color-accent-100: #B3E8E8;
+  --color-accent-200: #80D9D9;
+  --color-accent-300: #4DCACA;
+  --color-accent-400: #1ABBBB;
+  --color-accent-500: #00A3A3;
+  --color-accent-600: #008F8F;
+  --color-accent-700: #007A7A;
+  --color-accent-800: #006666;
+  --color-accent-900: #005252;
+  --color-accent-950: #002929;
+
+  /* Success - Verde */
+  --color-success-50: #E8F5E9;
+  --color-success-100: #C8E6C9;
+  --color-success-200: #A5D6A7;
+  --color-success-300: #81C784;
+  --color-success-400: #66BB6A;
+  --color-success-500: #008758;
+  --color-success-600: #007A4D;
+  --color-success-700: #006D42;
+  --color-success-800: #005F37;
+  --color-success-900: #00522C;
+
+  /* Warning - Ocra */
+  --color-warning-50: #FFF8E1;
+  --color-warning-100: #FFECB3;
+  --color-warning-200: #FFE082;
+  --color-warning-300: #FFD54F;
+  --color-warning-400: #FFCA28;
+  --color-warning-500: #A66300;
+  --color-warning-600: #8F5600;
+  --color-warning-700: #784900;
+  --color-warning-800: #613C00;
+  --color-warning-900: #4A2F00;
+
+  /* Error - Rosso */
+  --color-error-50: #FFEBEE;
+  --color-error-100: #FFCDD2;
+  --color-error-200: #EF9A9A;
+  --color-error-300: #E57373;
+  --color-error-400: #EF5350;
+  --color-error-500: #D32F2F;
+  --color-error-600: #C62828;
+  --color-error-700: #B71C1C;
+  --color-error-800: #A31515;
+  --color-error-900: #8B0000;
+
+  /* Info - Blu chiaro */
+  --color-info-50: #E3F2FD;
+  --color-info-100: #BBDEFB;
+  --color-info-200: #90CAF9;
+  --color-info-300: #64B5F6;
+  --color-info-400: #42A5F5;
+  --color-info-500: #1976D2;
+  --color-info-600: #1565C0;
+  --color-info-700: #0D47A1;
+  --color-info-800: #0A3D8F;
+  --color-info-900: #07337D;
+
+  /* Neutral - Gray Scale */
+  --color-neutral-white: #FFFFFF;
+  --color-neutral-50: #F5F6F7;
+  --color-neutral-100: #E8EAEC;
+  --color-neutral-200: #D4D7DB;
+  --color-neutral-300: #ADB2B8;
+  --color-neutral-400: #858C94;
+  --color-neutral-500: #5C6470;
+  --color-neutral-600: #495057;
+  --color-neutral-700: #3D434A;
+  --color-neutral-800: #30353B;
+  --color-neutral-900: #1F2328;
+  --color-neutral-950: #17191C;
+  --color-neutral-black: #000000;
+
+  /* ============================================
+   * TYPOGRAPHY - UI Kit Italia
+   * Font: Titillium Web (Google Fonts)
+   * ============================================ */
+
+  /* Font Families */
+  --font-sans: "Titillium Web", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --font-serif: "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.75rem;   /* 28px */
+  --font-size-4xl: 2rem;      /* 32px */
+  --font-size-5xl: 2.5rem;    /* 40px */
+  --font-size-6xl: 3rem;      /* 48px */
+  --font-size-7xl: 3.5rem;    /* 56px */
+  --font-size-8xl: 4rem;      /* 64px */
+  --font-size-9xl: 4.5rem;    /* 72px */
+
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.2;
+  --line-height-normal: 1.35;
+  --line-height-relaxed: 1.5;
+  --line-height-loose: 1.75;
+
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  /* ============================================
+   * SPACING - UI Kit Italia
+   * Base unit: 4px (0.25rem)
+   * ============================================ */
+
+  /* Base Spacing Scale */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0-5: 0.125rem;  /* 2px */
+  --spacing-1: 0.25rem;     /* 4px */
+  --spacing-1-5: 0.375rem;  /* 6px */
+  --spacing-2: 0.5rem;      /* 8px */
+  --spacing-2-5: 0.625rem;  /* 10px */
+  --spacing-3: 0.75rem;     /* 12px */
+  --spacing-3-5: 0.875rem;  /* 14px */
+  --spacing-4: 1rem;        /* 16px */
+  --spacing-5: 1.25rem;     /* 20px */
+  --spacing-6: 1.5rem;      /* 24px */
+  --spacing-7: 1.75rem;     /* 28px */
+  --spacing-8: 2rem;        /* 32px */
+  --spacing-9: 2.25rem;     /* 36px */
+  --spacing-10: 2.5rem;     /* 40px */
+  --spacing-11: 2.75rem;    /* 44px */
+  --spacing-12: 3rem;       /* 48px */
+  --spacing-14: 3.5rem;     /* 56px */
+  --spacing-16: 4rem;       /* 64px */
+  --spacing-20: 5rem;       /* 80px */
+  --spacing-24: 6rem;       /* 96px */
+  --spacing-28: 7rem;       /* 112px */
+  --spacing-32: 8rem;       /* 128px */
+  --spacing-36: 9rem;       /* 144px */
+  --spacing-40: 10rem;      /* 160px */
+  --spacing-48: 12rem;      /* 192px */
+  --spacing-56: 14rem;      /* 224px */
+  --spacing-64: 16rem;      /* 256px */
+  --spacing-72: 18rem;      /* 288px */
+  --spacing-80: 20rem;      /* 320px */
+  --spacing-96: 24rem;      /* 384px */
+
+  /* Semantic Gap */
+  --gap-xs: var(--spacing-1);   /* 4px */
+  --gap-sm: var(--spacing-2);   /* 8px */
+  --gap-md: var(--spacing-3);   /* 12px */
+  --gap-lg: var(--spacing-4);   /* 16px */
+  --gap-xl: var(--spacing-6);   /* 24px */
+  --gap-2xl: var(--spacing-8);  /* 32px */
+  --gap-3xl: var(--spacing-12); /* 48px */
+  --gap-4xl: var(--spacing-16); /* 64px */
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;    /* 2px */
+  --radius-default: 0.25rem; /* 4px */
+  --radius-md: 0.375rem;    /* 6px */
+  --radius-lg: 0.5rem;      /* 8px */
+  --radius-xl: 0.75rem;     /* 12px */
+  --radius-2xl: 1rem;       /* 16px */
+  --radius-3xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;
+
+  /* Container Widths */
+  --container-sm: 24rem;    /* 384px */
+  --container-md: 28rem;    /* 448px */
+  --container-lg: 32rem;    /* 512px */
+  --container-xl: 36rem;    /* 576px */
+  --container-2xl: 42rem;   /* 672px */
+  --container-3xl: 48rem;   /* 768px */
+  --container-4xl: 56rem;   /* 896px */
+  --container-5xl: 64rem;   /* 1024px */
+  --container-6xl: 72rem;   /* 1152px */
+  --container-7xl: 80rem;   /* 1280px - UI Kit Italia standard */
+
+  /* Z-Index Scale */
+  --z-behind: -1;
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 20;
+  --z-sticky: 30;
+  --z-fixed: 40;
+  --z-overlay: 50;
+  --z-modal: 60;
+  --z-tooltip: 70;
+  --z-toast: 80;
+  --z-max: 9999;
+
+  /* Semantic tokens */
+  --background: var(--color-neutral-white);
+  --foreground: var(--color-neutral-900);
+  --text-primary: var(--color-neutral-900);
+  --text-secondary: var(--color-neutral-500);
+  --text-muted: var(--color-neutral-400);
+  --text-disabled: var(--color-neutral-300);
+  --text-inverse: var(--color-neutral-white);
+  --text-link: var(--color-primary-500);
+  --text-link-hover: var(--color-primary-700);
+  --border-light: var(--color-neutral-100);
+  --border-default: var(--color-neutral-200);
+  --border-dark: var(--color-neutral-300);
+  --border-focus: var(--color-primary-500);
+}
+
+@theme inline {
+  /* Base colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Primary palette */
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
+  --color-primary-950: var(--color-primary-950);
+  --color-primary: var(--color-primary-500);
+
+  /* Accent palette */
+  --color-accent-50: var(--color-accent-50);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+  --color-accent-800: var(--color-accent-800);
+  --color-accent-900: var(--color-accent-900);
+  --color-accent-950: var(--color-accent-950);
+  --color-accent: var(--color-accent-500);
+
+  /* System colors */
+  --color-success: var(--color-success-500);
+  --color-warning: var(--color-warning-500);
+  --color-error: var(--color-error-500);
+  --color-info: var(--color-info-500);
+
+  /* Neutral palette */
+  --color-neutral-50: var(--color-neutral-50);
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-200: var(--color-neutral-200);
+  --color-neutral-300: var(--color-neutral-300);
+  --color-neutral-400: var(--color-neutral-400);
+  --color-neutral-500: var(--color-neutral-500);
+  --color-neutral-600: var(--color-neutral-600);
+  --color-neutral-700: var(--color-neutral-700);
+  --color-neutral-800: var(--color-neutral-800);
+  --color-neutral-900: var(--color-neutral-900);
+  --color-neutral-950: var(--color-neutral-950);
+
+  /* Typography - Font Families */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  /* Typography - Font Sizes */
+  --text-xs: var(--font-size-xs);
+  --text-sm: var(--font-size-sm);
+  --text-base: var(--font-size-base);
+  --text-lg: var(--font-size-lg);
+  --text-xl: var(--font-size-xl);
+  --text-2xl: var(--font-size-2xl);
+  --text-3xl: var(--font-size-3xl);
+  --text-4xl: var(--font-size-4xl);
+  --text-5xl: var(--font-size-5xl);
+  --text-6xl: var(--font-size-6xl);
+  --text-7xl: var(--font-size-7xl);
+  --text-8xl: var(--font-size-8xl);
+  --text-9xl: var(--font-size-9xl);
+
+  /* Typography - Line Heights */
+  --leading-none: var(--line-height-none);
+  --leading-tight: var(--line-height-tight);
+  --leading-snug: var(--line-height-snug);
+  --leading-normal: var(--line-height-normal);
+  --leading-relaxed: var(--line-height-relaxed);
+  --leading-loose: var(--line-height-loose);
+
+  /* Typography - Letter Spacing */
+  --tracking-tighter: var(--letter-spacing-tighter);
+  --tracking-tight: var(--letter-spacing-tight);
+  --tracking-normal: var(--letter-spacing-normal);
+  --tracking-wide: var(--letter-spacing-wide);
+  --tracking-wider: var(--letter-spacing-wider);
+  --tracking-widest: var(--letter-spacing-widest);
+
+  /* Spacing - Border Radius */
+  --radius-none: var(--radius-none);
+  --radius-sm: var(--radius-sm);
+  --radius-default: var(--radius-default);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-3xl: var(--radius-3xl);
+  --radius-full: var(--radius-full);
+
+  /* Spacing - Container */
+  --container-7xl: var(--container-7xl);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--color-neutral-950);
+    --foreground: var(--color-neutral-100);
+    --text-primary: var(--color-neutral-100);
+    --text-secondary: var(--color-neutral-400);
+    --text-muted: var(--color-neutral-500);
+    --text-disabled: var(--color-neutral-600);
+    --text-inverse: var(--color-neutral-900);
+    --border-light: var(--color-neutral-800);
+    --border-default: var(--color-neutral-700);
+    --border-dark: var(--color-neutral-600);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* ============================================
+ * Typography Base Styles
+ * ============================================ */
+
+/* Headings */
+h1, .h1 {
+  font-size: var(--font-size-6xl);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h2, .h2 {
+  font-size: var(--font-size-5xl);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h3, .h3 {
+  font-size: var(--font-size-4xl);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-semibold);
+}
+
+h4, .h4 {
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-semibold);
+}
+
+h5, .h5 {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-semibold);
+}
+
+h6, .h6 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Body text */
+p, .body {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Lead text */
+.lead {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-light);
+}
+
+/* Small text */
+small, .small, .caption {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-loose);
+}
+
+/* Links */
+a {
+  color: var(--text-link);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+/* Code */
+code, pre {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+/* Labels */
+label, .label {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-semibold);
+}
