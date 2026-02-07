@@ -13,7 +13,7 @@
 
 import { type ReactNode, useId } from 'react';
 import Image from 'next/image';
-import { Button, type ButtonProps } from '../../atoms/Button';
+import { Button, type ButtonProps, type ButtonVariant } from '../../atoms/Button';
 
 export type HeroVariant = 'default' | 'left' | 'withImage' | 'fullImage';
 export type HeroSize = 'sm' | 'md' | 'lg';
@@ -50,6 +50,8 @@ export interface HeroProps {
   imageAlt?: string;
   /** Posizione immagine (solo per withImage) */
   imagePosition?: 'left' | 'right';
+  /** Se true, l'immagine occupa tutta l'altezza della sezione senza padding (solo per withImage) */
+  imageFlush?: boolean;
   /** Contenuto custom aggiuntivo */
   children?: ReactNode;
   /** Classe CSS aggiuntiva */
@@ -89,9 +91,9 @@ const alignmentStyles: Record<'center' | 'left', string> = {
 function getButtonVariant(
   background: HeroBackground,
   isPrimary: boolean
-): ButtonProps['variant'] {
+): ButtonVariant {
   if (background === 'primary' || background === 'dark') {
-    return isPrimary ? 'secondary' : 'tertiary';
+    return 'tertiaryInverted';
   }
   return isPrimary ? 'primary' : 'secondary';
 }
@@ -128,6 +130,7 @@ export function Hero({
   imageUrl,
   imageAlt = '',
   imagePosition = 'right',
+  imageFlush = false,
   children,
   className = '',
 }: HeroProps) {
@@ -215,24 +218,54 @@ export function Hero({
     return (
       <section
         aria-labelledby={titleId}
-        className={`${backgroundStyles[background]} ${sizeStyles[size]} ${className}`}
+        className={`overflow-hidden ${backgroundStyles[background]} ${
+          imageFlush ? '' : sizeStyles[size]
+        } ${className}`}
       >
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
+        <div
+          className={`${
+            imageFlush ? 'w-full px-0' : 'container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl'
+          }`}
+        >
           <div
             className={`flex flex-col ${
               imagePosition === 'left' ? 'md:flex-row-reverse' : 'md:flex-row'
-            } gap-8 md:gap-12 lg:gap-16 items-center`}
+            } ${imageFlush ? 'items-stretch' : 'items-center'} ${
+              imageFlush ? '' : 'gap-8 md:gap-12 lg:gap-16'
+            }`}
           >
-            {textContent}
+            {imageFlush ? (
+              <div
+                className={`flex-1 flex flex-col justify-center ${sizeStyles[size]} px-4 md:px-6 lg:px-12`}
+              >
+                <div
+                  className={`w-full max-w-[640px] ${
+                    imagePosition === 'left' ? 'mr-auto' : 'ml-auto'
+                  }`}
+                >
+                  {textContent}
+                </div>
+              </div>
+            ) : (
+              textContent
+            )}
 
             {/* Image */}
             {imageUrl && (
-              <div className="flex-1 w-full relative aspect-[4/3] min-h-[300px]">
+              <div
+                className={`flex-1 w-full relative ${
+                  imageFlush
+                    ? 'min-h-[400px] md:min-h-0'
+                    : 'aspect-[4/3] min-h-[300px]'
+                }`}
+              >
                 <Image
                   src={imageUrl}
                   alt={imageAlt}
                   fill
-                  className="rounded-lg shadow-lg object-cover"
+                  className={`${
+                    imageFlush ? '' : 'rounded-lg shadow-lg'
+                  } object-cover`}
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>

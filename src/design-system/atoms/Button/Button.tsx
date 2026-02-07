@@ -21,11 +21,14 @@ export type ButtonVariant =
   | 'secondary'
   | 'tertiary'
   | 'danger'
-  | 'link';
+  | 'link'
+  | 'primaryInverted'
+  | 'secondaryInverted'
+  | 'tertiaryInverted';
 
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement | HTMLAnchorElement> {
   /** Variante visiva del bottone */
   variant?: ButtonVariant;
   /** Dimensione del bottone */
@@ -40,6 +43,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
   /** Contenuto del bottone */
   children: ReactNode;
+  /** Elemento da renderizzare (default: button) */
+  as?: React.ElementType;
 }
 
 /**
@@ -50,7 +55,7 @@ const baseStyles = [
   'font-semibold transition-all duration-200',
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
   'disabled:cursor-not-allowed disabled:opacity-50',
-  'select-none',
+  'select-none whitespace-nowrap',
 ].join(' ');
 
 /**
@@ -93,6 +98,25 @@ const variantStyles: Record<ButtonVariant, string> = {
     'focus-visible:outline-[var(--color-primary-500)]',
     'p-0', // Reset padding for link style
   ].join(' '),
+
+  primaryInverted: [
+    'bg-white text-[var(--color-primary-500)]',
+    'hover:bg-[var(--color-neutral-100)]',
+    'focus-visible:outline-white',
+  ].join(' '),
+
+  secondaryInverted: [
+    'bg-transparent text-white',
+    'border-2 border-white',
+    'hover:bg-white/10',
+    'focus-visible:outline-white',
+  ].join(' '),
+
+  tertiaryInverted: [
+    'bg-transparent text-white/90',
+    'hover:text-white hover:bg-white/10',
+    'focus-visible:outline-white',
+  ].join(' '),
 };
 
 /**
@@ -117,23 +141,9 @@ const iconSizeMap: Record<ButtonSize, IconSize> = {
  * Button Component
  *
  * Componente bottone conforme alle linee guida UI Kit Italia.
- *
- * @example
- * ```tsx
- * <Button variant="primary" size="md">
- *   Azione principale
- * </Button>
- *
- * <Button variant="secondary" iconLeft={<Icon />}>
- *   Con icona
- * </Button>
- *
- * <Button variant="danger" isLoading>
- *   Eliminazione in corso...
- * </Button>
- * ```
+ * Supporta il rendering come altro elemento (es. anchor) tramite la prop 'as'.
  */
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLElement, ButtonProps>(
   (
     {
       variant = 'primary',
@@ -145,7 +155,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       children,
       className = '',
-      type = 'button',
+      as: Component = 'button',
       ...props
     },
     ref
@@ -153,11 +163,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || isLoading;
 
     // Link variant non ha padding di size, usa solo base
-    const sizeClass = variant === 'link' ? '' : sizeStyles[size];
+    const sizeClass = variant === 'link' ? '' : sizeStyles[size as ButtonSize];
 
     const buttonClasses = [
       baseStyles,
-      variantStyles[variant],
+      variantStyles[variant as ButtonVariant] || variantStyles.primary,
       sizeClass,
       fullWidth ? 'w-full' : '',
       className,
@@ -165,16 +175,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       .filter(Boolean)
       .join(' ');
 
-    const iconSize = iconSizeMap[size];
+    const iconSize = iconSizeMap[size as ButtonSize];
 
     return (
-      <button
+      <Component
         ref={ref}
-        type={type}
-        disabled={isDisabled}
+        disabled={Component === 'button' ? isDisabled : undefined}
         className={buttonClasses}
         aria-busy={isLoading}
-        {...props}
+        {...(props as any) /* eslint-disable-line @typescript-eslint/no-explicit-any */}
       >
         {isLoading ? (
           <Icon icon={Loader2} size={iconSize} className="animate-spin" />
@@ -185,7 +194,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <span>{children}</span>
 
         {!isLoading && iconRight && iconRight}
-      </button>
+      </Component>
     );
   }
 );

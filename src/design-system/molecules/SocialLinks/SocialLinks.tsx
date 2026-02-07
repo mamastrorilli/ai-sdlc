@@ -75,7 +75,7 @@ export function SocialLinks({
             focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-500)]
             ${
               isDark
-                ? 'text-neutral-400 hover:text-white hover:bg-white/10'
+                ? '!text-white hover:bg-white/10'
                 : 'text-[var(--color-neutral-600)] hover:text-[var(--color-primary-500)] hover:bg-[var(--color-primary-50)]'
             }
           `.trim().replace(/\s+/g, ' ')}

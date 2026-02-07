@@ -60,6 +60,10 @@ const meta: Meta<typeof Hero> = {
       control: 'text',
       description: 'URL immagine',
     },
+    imageFlush: {
+      control: 'boolean',
+      description: 'Image occupa tutta l\'altezza (solo withImage)',
+    },
   },
   args: {
     title: 'Il Design System per la Pubblica Amministrazione',
@@ -185,6 +189,27 @@ export const FullImage: Story = {
     actions: [
       { label: 'Partecipa', href: '#', variant: 'secondary' },
       { label: 'Maggiori informazioni', href: '#', variant: 'tertiary' },
+    ],
+  },
+};
+
+/**
+ * Hero con immagine flush (senza padding verticale)
+ */
+export const ImageFlush: Story = {
+  args: {
+    variant: 'withImage',
+    background: 'dark',
+    imageFlush: true,
+    kicker: 'Novità',
+    title: 'Layout Split Moderno',
+    subtitle:
+      "In questa variante l'immagine occupa tutta l'altezza della sezione, creando un effetto split moderno ed impattante.",
+    imageUrl: placeholderImage,
+    imageAlt: 'Modern technology display',
+    actions: [
+      { label: 'Inizia subito', href: '#' },
+      { label: 'Vedi esempi', href: '#', variant: 'tertiary' },
     ],
   },
 };

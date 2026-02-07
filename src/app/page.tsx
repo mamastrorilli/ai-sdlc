@@ -243,7 +243,8 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <Hero
-        variant="default"
+        variant="withImage"
+        imageFlush
         size="lg"
         background="primary"
         kicker="Design System"
@@ -253,6 +254,8 @@ export default function Home() {
           { label: 'Storybook', href: STORYBOOK_URL },
           { label: 'GitHub', href: GITHUB_URL },
         ]}
+        imageUrl="/images/hero-banner-hp.jpg"
+        imageAlt="Neural network and artificial intelligence conceptual background"
       />
 
       {/* FAQ Section */}

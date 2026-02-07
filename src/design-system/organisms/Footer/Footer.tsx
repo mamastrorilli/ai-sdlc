@@ -82,7 +82,7 @@ export function Footer({
     ? 'bg-[var(--color-neutral-900)]'
     : 'bg-[var(--color-neutral-100)]';
 
-  const textColor = isDark ? 'text-neutral-400' : 'text-[var(--color-neutral-600)]';
+  const textColor = isDark ? 'text-white' : 'text-[var(--color-neutral-600)]';
 
   return (
     <footer className={`${bgColor} ${className}`}>

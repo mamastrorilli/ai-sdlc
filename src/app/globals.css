@@ -437,9 +437,8 @@ small, .small, .caption {
   line-height: var(--line-height-loose);
 }
 
-/* Links */
+/* Links*/
 a {
-  color: var(--text-link);
   font-weight: var(--font-weight-semibold);
   text-decoration: underline;
   text-underline-offset: 2px;
