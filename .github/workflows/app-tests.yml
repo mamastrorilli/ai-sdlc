@@ -1,0 +1,65 @@
+name: App Performance & A11y
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Permessi necessari per commentare (se volessimo aggiungere commenti ai commit)
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lighthouse-check:
+    name: Lighthouse User Flow
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Lighthouse User Flow
+        run: |
+          yarn build
+          yarn start &
+          npx wait-on tcp:3000
+          node scripts/lighthouse-flow.mjs
+
+      - name: Upload Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: lighthouse-report/user-flow.html
+
+  deploy-production:
+    name: Deploy to Vercel (Production)
+    needs: lighthouse-check
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: API Check & Deploy
+        # Deploy to production. Requires VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID secrets.
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}

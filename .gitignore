@@ -41,3 +41,5 @@ storybook-static
 
 .claude
 .claude/settings.local.json
+
+.vercel
