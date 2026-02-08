@@ -51,17 +51,27 @@ Il progetto è progettato per questo flusso di lavoro:
 
 ## 🔄 CI/CD Pipeline (GitHub Actions)
 
-Il workflow `.github/workflows/storybook-tests.yml` si attiva su ogni push/PR verso `main`:
+Il sistema utilizza due workflow che si attivano su ogni push/PR verso `main`:
 
+### 1. Design System Quality & Documentation (`.github/workflows/storybook-tests.yml`)
 ```
 Push/PR → Install → Build Storybook → Test A11y → Lighthouse CI → Deploy (GitHub Pages)
 ```
 
-### Cosa fa
+**Step:**
 1. **Build Storybook** — genera la build statica
 2. **Test accessibilita** — axe-core via `@storybook/test-runner` (WCAG 2.1 AA)
 3. **Lighthouse CI** — performance, accessibility, best practices
 4. **Deploy** — pubblica su GitHub Pages (solo push su main, dopo che tutti i test passano)
+
+### 2. Web App Quality & Release (`.github/workflows/app-tests.yml`)
+```
+Push/PR → Install → Build App → Lighthouse User Flow → Deploy (Vercel)
+```
+
+**Step:**
+1. **Lighthouse User Flow** — esegue script di navigazione utente per metriche performance/a11y (`yarn build` + `yarn start`)
+2. **Deploy Production** — pubblica su Vercel (solo push su main, dopo Lighthouse ok)
 
 ### Notifiche automatiche
 Se Lighthouse CI rileva problemi, viene creato un **commento sul commit** GitHub con:

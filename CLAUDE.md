@@ -7,6 +7,7 @@ Contesto VIVO: ogni nuova componente → aggiorna automaticamente:
 1. `CLAUDE.md` (nuova sezione componenti)
 2. `.context/design-system.md` (descrizione + props)
 3. Storybook story + play function
+4. Pipeline CI/CD → aggiorna `CLAUDE.md` e `README.md` con i nuovi workflow/step
 
 ## Figma MCP Workflow
 Figma Dev Mode → Claude Code → React component → auto-update docs
@@ -34,12 +35,17 @@ Figma Dev Mode → Claude Code → React component → auto-update docs
 
 Workflow: `.github/workflows/storybook-tests.yml`
 
-### Pipeline (su push/PR verso main)
+### Pipeline Design System (su push/PR verso main)
 1. **Install** — `yarn install --frozen-lockfile` (Node 20)
 2. **Build Storybook** — genera build statico
 3. **Test a11y** — test-runner con axe-core (WCAG 2.1 AA)
 4. **Lighthouse CI** — performance + accessibility score
 5. **Deploy** — GitHub Pages (solo push su main, dopo test ok)
+
+### Pipeline Web App (su push/PR verso main)
+Workflow: `.github/workflows/app-tests.yml`
+1. **Lighthouse User Flow** — `yarn build` + `yarn start` + `node scripts/lighthouse-flow.mjs`
+2. **Deploy Production** — Vercel (solo push su main, dopo Lighthouse ok)
 
 ### Notifiche
 Se Lighthouse CI fallisce, viene aggiunto automaticamente un **commento sul commit** con:

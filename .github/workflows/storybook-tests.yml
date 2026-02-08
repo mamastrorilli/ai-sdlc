@@ -3,7 +3,7 @@
 # - Performance via Lighthouse CI
 # - Deploy su GitHub Pages solo da main
 
-name: Storybook Tests
+name: Design System Quality & Documentation
 
 on:
   push:
