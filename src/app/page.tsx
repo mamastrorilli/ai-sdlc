@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 
 import { Github, Linkedin, BookOpen, FileCode } from 'lucide-react';
 import { Hero, Footer } from '@/design-system/organisms';
@@ -239,8 +240,27 @@ const socialLinks: SocialLinkItem[] = [
 ];
 
 export default function Home() {
+  const [showCls, setShowCls] = useState(false);
+
+  useEffect(() => {
+    // Delay to simulate late content loading causing CLS
+    const timer = setTimeout(() => {
+      setShowCls(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
+      {/* CLS Regression Injection */}
+      {showCls && (
+        <div 
+          className="w-full bg-red-500 text-white flex items-center justify-center font-bold text-2xl"
+          style={{ height: '400px' }}
+        >
+          CLS REGRESSION INJECTED
+        </div>
+      )}
       {/* Hero Section */}
       <Hero
         variant="withImage"
