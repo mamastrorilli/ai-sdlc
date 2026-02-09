@@ -103,6 +103,11 @@ L'issue creata automaticamente contiene:
 - `auto-fix` - Pronto per fix automatico
 - `claude-code` - Contiene istruzioni per Claude Code
 
+### Notifiche
+
+L'issue viene automaticamente assegnata a chi ha fatto il commit (`context.actor`).
+GitHub invia email di notifica all'assignee se le notifiche sono abilitate in Settings > Notifications.
+
 ### Soglie CI/CD
 
 | Metrica | Soglia | Azione |

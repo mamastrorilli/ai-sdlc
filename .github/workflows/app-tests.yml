@@ -109,10 +109,12 @@ jobs:
               repo: context.repo.repo,
               title: title,
               body: body,
-              labels: ['accessibility', 'lighthouse', 'auto-fix', 'claude-code', 'web-app']
+              labels: ['accessibility', 'lighthouse', 'auto-fix', 'claude-code', 'web-app'],
+              assignees: [context.actor]  // Assegna a chi ha fatto il commit
             });
 
             console.log(`Created issue #${issue.number}: ${issue.html_url}`);
+            console.log(`Assigned to: ${context.actor}`);
 
       - name: Fail if Lighthouse failed
         if: steps.lighthouse.outcome == 'failure'

@@ -159,10 +159,12 @@ jobs:
               repo: context.repo.repo,
               title: title,
               body: body,
-              labels: ['accessibility', 'lighthouse', 'auto-fix', 'claude-code']
+              labels: ['accessibility', 'lighthouse', 'auto-fix', 'claude-code'],
+              assignees: [context.actor]  // Assegna a chi ha fatto il commit
             });
 
             console.log(`Created issue #${issue.number}: ${issue.html_url}`);
+            console.log(`Assigned to: ${context.actor}`);
 
             // Commenta anche sul commit con link all'issue
             await github.rest.repos.createCommitComment({
