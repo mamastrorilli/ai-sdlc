@@ -16,6 +16,8 @@ module.exports = {
       settings: {
         // Preset desktop: piu rappresentativo per componenti UI
         preset: 'desktop',
+        // Output JSON per parsing automatico (auto-fix system)
+        output: ['html', 'json'],
       },
     },
     assert: {

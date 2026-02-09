@@ -11,11 +11,12 @@ on:
   pull_request:
     branches: [main]
 
-# Permessi per GitHub Pages deployment
+# Permessi per GitHub Pages deployment e Issue creation
 permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
 
 # Cancella run precedenti sulla stessa branch per risparmiare risorse
 concurrency:
@@ -82,9 +83,98 @@ jobs:
           echo "$REPORT_LIST" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      # Commenta il commit con i risultati Lighthouse
-      - name: Comment on commit with Lighthouse results
+      # Genera report strutturato per auto-fix system
+      - name: Generate Lighthouse Report
         if: steps.lhci.outcome == 'failure'
+        id: report
+        run: |
+          node scripts/lighthouse-report-generator.mjs .lighthouseci lighthouse-report.json lighthouse-issue.md || true
+          if [ -f lighthouse-report.json ]; then
+            FAILURE_COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('lighthouse-report.json')).summary.totalFailures)")
+            echo "failure_count=$FAILURE_COUNT" >> $GITHUB_OUTPUT
+            echo "has_report=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_report=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Upload report JSON come artifact per debugging
+      - name: Upload Lighthouse Report
+        if: steps.lhci.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-accessibility-report
+          path: |
+            lighthouse-report.json
+            lighthouse-issue.md
+            .lighthouseci/*.json
+
+      # Crea GitHub Issue con contesto per Claude Code auto-fix
+      - name: Create GitHub Issue for Auto-Fix
+        if: steps.lhci.outcome == 'failure' && github.event_name == 'push' && steps.report.outputs.has_report == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Leggi il contenuto generato
+            if (!fs.existsSync('lighthouse-issue.md')) {
+              console.log('No issue content generated');
+              return;
+            }
+
+            const issueContent = fs.readFileSync('lighthouse-issue.md', 'utf8');
+            const reportData = JSON.parse(fs.readFileSync('lighthouse-report.json', 'utf8'));
+
+            // Chiudi issue auto-fix precedenti
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'lighthouse,auto-fix'
+            });
+
+            for (const issue of existingIssues.data) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+                state_reason: 'not_planned'
+              });
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `Closing in favor of new report from commit ${context.sha.substring(0, 7)}`
+              });
+            }
+
+            // Crea nuova issue
+            const title = `[Lighthouse Auto-Fix] ${reportData.summary.totalFailures} accessibility issue(s) in Design System`;
+            const body = issueContent.replace(/^#.*\n\n/, '') +
+              `\n\n---\n**Commit**: ${context.sha}\n**Workflow**: [Run #${context.runNumber}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`;
+
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['accessibility', 'lighthouse', 'auto-fix', 'claude-code']
+            });
+
+            console.log(`Created issue #${issue.number}: ${issue.html_url}`);
+
+            // Commenta anche sul commit con link all'issue
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `## Lighthouse CI - Accessibility check failed\n\nCreated auto-fix issue: #${issue.number}\n\n**Quick fix with Claude Code:**\n\`\`\`bash\ngh issue view ${issue.number} | claude\n\`\`\``
+            });
+
+      # Commenta il commit con i risultati Lighthouse (fallback se issue non creata)
+      - name: Comment on commit with Lighthouse results
+        if: steps.lhci.outcome == 'failure' && (github.event_name == 'pull_request' || steps.report.outputs.has_report != 'true')
         uses: actions/github-script@v7
         with:
           script: |
@@ -93,9 +183,9 @@ jobs:
             const reportLinks = `${{ steps.reports.outputs.links }}`;
 
             const body = [
-              `## ⚠️ Lighthouse CI - Accessibility check failed`,
+              `## Lighthouse CI - Accessibility check failed`,
               ``,
-              `Il commit \`${sha.substring(0, 7)}\` non supera le soglie di accessibilità configurate.`,
+              `Il commit \`${sha.substring(0, 7)}\` non supera le soglie di accessibilita configurate.`,
               ``,
               `**Report Lighthouse:**`,
               reportLinks || `Controlla i dettagli nel [log del workflow](${runUrl}).`,

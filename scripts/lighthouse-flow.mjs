@@ -123,10 +123,15 @@ async function runFlow() {
   // await flow.navigate(`${BASE_URL}/about`, { stepName: 'About Page' });
 
   // ============================================
-  // FASE 4: Generazione del Report HTML
+  // FASE 4: Generazione dei Report (HTML + JSON)
   // ============================================
-  console.log('📊 Generazione Report HTML...');
-  const report = await flow.generateReport();
+  console.log('📊 Generazione Report...');
+
+  // HTML report per ispezione visuale
+  const htmlReport = await flow.generateReport();
+
+  // JSON result per parsing programmatico (auto-fix system)
+  const flowResult = await flow.createFlowResult();
 
   // Creiamo la directory se non esiste
   const reportDir = 'lighthouse-report';
@@ -134,10 +139,15 @@ async function runFlow() {
     fs.mkdirSync(reportDir);
   }
 
-  // Salviamo il report (apribile nel browser per visualizzare i dettagli)
-  const reportPath = `${reportDir}/user-flow.html`;
-  fs.writeFileSync(reportPath, report);
-  console.log(`📁 Report salvato in: ${reportPath}`);
+  // Salviamo HTML report (apribile nel browser per visualizzare i dettagli)
+  const htmlPath = `${reportDir}/user-flow.html`;
+  fs.writeFileSync(htmlPath, htmlReport);
+  console.log(`📁 HTML Report: ${htmlPath}`);
+
+  // Salviamo JSON report (per auto-fix system)
+  const jsonPath = `${reportDir}/user-flow.json`;
+  fs.writeFileSync(jsonPath, JSON.stringify(flowResult, null, 2));
+  console.log(`📁 JSON Report: ${jsonPath}`);
 
   // ============================================
   // FASE 5: Analisi dei Risultati per CI
