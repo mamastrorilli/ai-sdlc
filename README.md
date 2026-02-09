@@ -11,10 +11,6 @@ Questo repository è un ambiente pre-configurato per lo sviluppo di un Design Sy
 
 ---
 
-## 🛠️ Setup Iniziale Eseguito
-
-In questa fase di bootstrap, l'AI Lead Engineer ha predisposto l'infrastruttura senza creare componenti UI reali, preparando il terreno per l'automazione Figma-to-Code.
-
 ### 1. Architettura Atomic Design
 Organizzata sotto `src/design-system/` con la seguente struttura:
 - `atoms/`, `molecules/`, `organisms/`, `templates/`: Cartelle pronte ad ospitare i componenti.
