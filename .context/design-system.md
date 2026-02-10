@@ -731,6 +731,19 @@ import { Hero } from '@/design-system/organisms';
    ```
 9. **Aggiornare CLAUDE.md** - Aggiorna la tabella componenti in `CLAUDE.md` (contesto per Claude Code e altri AI IDE).
 
+## CI/CD e Auto-Fix
+
+I workflow CI girano su push/PR verso `main`, `dev`, `test`.
+
+### Auto-Fix Agent
+Quando i check Lighthouse falliscono:
+1. Un agente Claude Code analizza il report
+2. Trova i file coinvolti e applica fix automatiche
+3. Pusha le modifiche sulla branch della PR (o crea nuova PR)
+4. Se l'auto-fix fallisce, viene creata una GitHub Issue per fix manuale
+
+**Secret richiesto**: `ANTHROPIC_API_KEY` nel repository GitHub.
+
 ## Utilizzo in Codice
 
 ### TypeScript Import

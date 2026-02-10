@@ -21,6 +21,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -79,28 +82,34 @@ jobs:
           git config user.name "claude-code[bot]"
           git config user.email "claude-code[bot]@users.noreply.github.com"
 
-          # Per PR: checkout della branch sorgente
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            git fetch origin ${{ github.head_ref }}
-            git checkout ${{ github.head_ref }}
+          # Verifica che il report esista
+          if [ ! -f flow-issue.md ]; then
+            echo "No report file found, skipping auto-fix"
+            echo "has_fixes=false" >> $GITHUB_OUTPUT
+            exit 0
           fi
 
-          # Esegui Claude Code con il report come contesto
-          claude --print --dangerously-skip-permissions \
-            --allowedTools "Read,Edit,Write,Glob,Grep,Bash(git status),Bash(git diff),Bash(git add),Bash(git commit)" \
-            "Sei un esperto di accessibilità e performance web. Analizza questo report Lighthouse User Flow e applica le fix necessarie.
-
-          REPORT:
-          $(cat flow-issue.md)
+          # Crea il prompt per Claude Code
+          cat > /tmp/claude-prompt.txt << 'PROMPT_EOF'
+          Sei un esperto di accessibilità e performance web. Analizza questo report Lighthouse User Flow e applica le fix necessarie.
 
           ISTRUZIONI:
           1. Leggi il report e identifica i problemi (a11y, performance, best practices)
           2. Trova i file coinvolti in src/
           3. Applica le fix seguendo le best practice WCAG 2.1 AA e Core Web Vitals
           4. Per i componenti design-system, usa solo i token definiti in tokens/
-          5. Dopo ogni modifica, committa con messaggio descrittivo
+          5. Modifica i file necessari per risolvere i problemi
 
-          NON creare nuovi file. Modifica solo i file esistenti."
+          NON creare nuovi file. NON fare commit. Modifica solo i file esistenti.
+
+          REPORT:
+          PROMPT_EOF
+
+          cat flow-issue.md >> /tmp/claude-prompt.txt
+
+          # Esegui Claude Code con il report come contesto
+          cat /tmp/claude-prompt.txt | claude --print --dangerously-skip-permissions \
+            --allowedTools "Read,Edit,Write,Glob,Grep"
 
           # Verifica se ci sono modifiche
           if [ -n "$(git status --porcelain)" ]; then

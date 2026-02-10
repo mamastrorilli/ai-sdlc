@@ -32,11 +32,39 @@ yarn lhci             # Lighthouse CI
 
 ## CI/CD
 
+### Branches protetti
+I workflow girano su push/PR verso: `main`, `dev`, `test`
+
 ### Pipeline Design System (`.github/workflows/storybook-tests.yml`)
-Install → Build Storybook → Test a11y (axe-core) → Lighthouse CI → Deploy GitHub Pages
+```
+Install → Build Storybook → Test a11y (axe-core) → Lighthouse CI
+  ↓ (se fallisce)
+  Claude Code Auto-Fix → Push fix sulla branch PR / Crea PR di fix
+  ↓ (se auto-fix fallisce)
+  Crea GitHub Issue per fix manuale
+  ↓ (se passa, solo su main)
+  Deploy GitHub Pages
+```
 
 ### Pipeline Web App (`.github/workflows/app-tests.yml`)
-Lighthouse User Flow → Deploy Vercel
+```
+Build → Lighthouse User Flow
+  ↓ (se fallisce)
+  Claude Code Auto-Fix → Push fix sulla branch PR / Crea PR di fix
+  ↓ (se auto-fix fallisce)
+  Crea GitHub Issue per fix manuale
+  ↓ (se passa, solo su main)
+  Deploy Vercel
+```
+
+### Auto-Fix Agent
+Quando i check Lighthouse falliscono, un agente Claude Code:
+1. Analizza il report generato
+2. Trova i file coinvolti nel codebase
+3. Applica fix di accessibilità/performance
+4. Committa e pusha (sulla PR esistente o crea nuova PR)
+
+**Requisito**: Secret `ANTHROPIC_API_KEY` configurato nel repository.
 
 ### Soglie Lighthouse
 | Metrica | Soglia | Blocca? |
