@@ -46,7 +46,7 @@ Sistema automatizzato per rilevare e risolvere problemi di accessibilità/perfor
 │ • JSON report errors            │
 │ • File paths affected           │
 │ • Codice rilevante              │
-│ • Comandi per Claude Code       │
+│ • Comandi per Claude / Antigravity │
 └───────────────┬─────────────────┘
                 │
                 ▼
@@ -90,7 +90,7 @@ L'issue creata automaticamente contiene:
    - Audit ID e score
    - Selettori CSS e snippet HTML
    - Suggerimenti fix WCAG
-3. **Claude Code Instructions** - Comandi pronti per fix automatico:
+3. **AI Instructions** - Comandi pronti per fix automatico:
    ```bash
    claude
    ```
@@ -101,7 +101,7 @@ L'issue creata automaticamente contiene:
 - `accessibility` - Problemi di accessibilità
 - `lighthouse` - Rilevato da Lighthouse CI
 - `auto-fix` - Pronto per fix automatico
-- `claude-code` - Contiene istruzioni per Claude Code
+- `ai-assistant` - Contiene istruzioni per Claude/Antigravity
 
 ### Notifiche
 

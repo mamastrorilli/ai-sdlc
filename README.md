@@ -28,7 +28,8 @@ Organizzata sotto `src/design-system/` con la seguente struttura:
 
 ### 3. Infrastruttura "AI Context" (VIVO)
 È stato creato un sistema di file per istruire Claude Code e altri modelli AI su come operare:
-- **`CLAUDE.md`**: Il cuore del contesto. Contiene le regole di sviluppo e il registro dinamico dei componenti.
+- **`CLAUDE.md`**: Il cuore del contesto per Claude Code. Contiene le regole di sviluppo e il registro dinamico dei componenti.
+- **`.agent/workflows/`**: Workflow operativi per Antigravity.
 - **`.context/design-system.md`**: Mantiene il mapping tra gli ID di Figma e i file nel codice.
 - **`.context/sdlc.md`**: Definisce le tappe del "Figma → Code → Docs" workflow.
 - **`.context/skills/`**: Script e istruzioni specializzate (Figma integration, Design Rules).
