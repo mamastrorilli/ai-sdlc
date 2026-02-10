@@ -114,7 +114,7 @@ function getButtonVariant(
  *   subtitle="Descrizione che spiega il contenuto della pagina"
  *   actions={[
  *     { label: 'Azione principale', href: '/action' },
- *     { label: 'Scopri di più', href: '/info', variant: 'secondary' }
+ *     { label: 'Scopri di pif9', href: '/info', variant: 'secondary' }
  *   ]}
  * />
  * ```
@@ -221,6 +221,7 @@ export function Hero({
         className={`overflow-hidden ${backgroundStyles[background]} ${
           imageFlush ? '' : sizeStyles[size]
         } ${className}`}
+        style={{ minHeight: '400px' }}
       >
         <div
           className={`${

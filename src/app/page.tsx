@@ -27,7 +27,7 @@ const faqItems: AccordionItemData[] = [
         </ul>
         <p>
           I componenti seguono le linee guida del{' '}
-          <strong>UI Kit Italia</strong> per garantire accessibilità e coerenza
+          <strong>UI Kit Italia</strong> per garantire accessibilit0 e coerenza
           visiva.
         </p>
       </div>
@@ -52,7 +52,7 @@ const faqItems: AccordionItemData[] = [
             standardizzate
           </li>
           <li>
-            <strong>Spacing</strong>: Sistema basato su unità di 4px
+            <strong>Spacing</strong>: Sistema basato su unit0 di 4px
           </li>
         </ul>
       </div>
@@ -71,7 +71,7 @@ const faqItems: AccordionItemData[] = [
           <li>
             <strong>Play functions</strong> per test di interazione automatizzati
           </li>
-          <li>Test di accessibilità integrati con axe-core</li>
+          <li>Test di accessibilit0 integrati con axe-core</li>
         </ul>
         <p>
           Comando: <code className="bg-neutral-100 px-2 py-1 rounded">yarn storybook</code>
@@ -90,7 +90,7 @@ const faqItems: AccordionItemData[] = [
         <ol className="list-decimal list-inside space-y-1 ml-2">
           <li>Install dependencies con yarn</li>
           <li>Build Storybook statico</li>
-          <li>Test accessibilità (WCAG 2.1 AA) con axe-core</li>
+          <li>Test accessibilita (WCAG 2.1 AA) con axe-core</li>
           <li>Lighthouse CI per performance e accessibility score</li>
           <li>Deploy automatico su GitHub Pages</li>
         </ol>
@@ -103,7 +103,7 @@ const faqItems: AccordionItemData[] = [
     content: (
       <div className="space-y-3">
         <p>
-          Controlli automatici di qualità con <strong>Lighthouse CI</strong>:
+          Controlli automatici di qualit0 con <strong>Lighthouse CI</strong>:
         </p>
         <table className="w-full text-sm border-collapse">
           <thead>
@@ -140,7 +140,7 @@ const faqItems: AccordionItemData[] = [
     content: (
       <div className="space-y-3">
         <p>
-          Integrazione <strong>Figma Dev Mode → Claude Code</strong>:
+          Integrazione <strong>Figma Dev Mode 2 Claude Code</strong>:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Estrazione automatica di componenti da Figma</li>
@@ -153,11 +153,11 @@ const faqItems: AccordionItemData[] = [
   },
   {
     id: 'accessibility',
-    title: 'Accessibilità (WCAG 2.1 AA)',
+    title: 'Accessibilita (WCAG 2.1 AA)',
     content: (
       <div className="space-y-3">
         <p>
-          L&apos;accessibilità è una priorità core del progetto:
+          L&apos;accessibilita e una priorite core del progetto:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Test automatici con axe-core su ogni componente</li>
@@ -261,47 +261,49 @@ export default function Home() {
           CLS REGRESSION INJECTED
         </div>
       )}
-      {/* Hero Section */}
-      <Hero
-        variant="withImage"
-        imageFlush
-        size="lg"
-        background="primary"
-        kicker="Design System"
-        title="AI SDLC"
-        subtitle="Un Design System moderno costruito con AI-assisted development. Integrazione Figma, componenti accessibili e pipeline CI/CD automatizzata."
-        actions={[
-          { label: 'Storybook', href: STORYBOOK_URL },
-          { label: 'GitHub', href: GITHUB_URL },
-        ]}
-        imageUrl="/images/hero-banner-hp.jpg"
-        imageAlt="Neural network and artificial intelligence conceptual background"
-      />
+      <main>
+        {/* Hero Section */}
+        <Hero
+          variant="withImage"
+          imageFlush
+          size="lg"
+          background="primary"
+          kicker="Design System"
+          title="AI SDLC"
+          subtitle="Un Design System moderno costruito con AI-assisted development. Integrazione Figma, componenti accessibili e pipeline CI/CD automatizzata."
+          actions={[
+            { label: 'Storybook', href: STORYBOOK_URL },
+            { label: 'GitHub', href: GITHUB_URL },
+          ]}
+          imageUrl="/images/hero-banner-hp.jpg"
+          imageAlt="Neural network and artificial intelligence conceptual background"
+        />
 
-      {/* FAQ Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[var(--color-neutral-900)]">
-            Cosa è stato implementato
-          </h2>
-          <p className="text-lg text-center text-[var(--color-neutral-600)] mb-12">
-            Scopri tutte le funzionalità e tecnologie del progetto
-          </p>
+        {/* FAQ Section */}
+        <section className="py-16 md:py-24">
+          <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[var(--color-neutral-900)]">
+              Cosa e stato implementato
+            </h2>
+            <p className="text-lg text-center text-[var(--color-neutral-600)] mb-12">
+              Scopri tutte le funzionalite e tecnologie del progetto
+            </p>
 
-          <Accordion
-            variant="activeBackground"
-            items={faqItems}
-            allowMultiple
-          />
-        </div>
-      </section>
+            <Accordion
+              variant="activeBackground"
+              items={faqItems}
+              allowMultiple
+            />
+          </div>
+        </section>
+      </main>
 
       {/* Footer */}
       <Footer
-        description="Design System moderno costruito con AI-assisted development. Basato su UI Kit Italia per garantire accessibilità e coerenza visiva."
+        description="Design System moderno costruito con AI-assisted development. Basato su UI Kit Italia per garantire accessibilite e coerenza visiva."
         columns={footerColumns}
         socialLinks={socialLinks}
-        copyright="© 2024 AI SDLC Design System — Built with Next.js, Tailwind CSS & Claude Code"
+        copyright="9 2024 AI SDLC Design System 4 Built with Next.js, Tailwind CSS & Claude Code"
       />
     </div>
   );
