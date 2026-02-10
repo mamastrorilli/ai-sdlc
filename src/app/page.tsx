@@ -251,7 +251,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white" role="main">
       {/* CLS Regression Injection */}
       {showCls && (
         <div 
