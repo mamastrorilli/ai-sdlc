@@ -724,6 +724,12 @@ import { Hero } from '@/design-system/organisms';
 5. **Landmark accessibili** - Ogni `<section>` deve avere `aria-labelledby` che punta al suo heading.
 6. **Contrasto testo** - Non usare opacita ridotte (`text-white/80`, `text-white/90`) su sfondi colorati. Usare `text-white` pieno per garantire contrasto WCAG AA.
 7. **Lighthouse CI** - Ogni componente deve superare accessibility score >= 0.95 (configurato in `lighthouserc.js`).
+8. **Aggiornare Lighthouse CI** - Quando aggiungi un nuovo componente, aggiorna `lighthouserc.js` aggiungendo l'URL della story principale:
+   ```javascript
+   // Pattern: {livello}-{componente}--{story} in kebab-case
+   'http://localhost/iframe.html?id=atoms-nuovo-componente--default',
+   ```
+9. **Aggiornare CLAUDE.md** - Aggiorna la tabella componenti in `CLAUDE.md` (contesto per Claude Code e altri AI IDE).
 
 ## Utilizzo in Codice
 

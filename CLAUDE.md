@@ -8,7 +8,11 @@ Architettura: Atomic Design (Atoms → Molecules → Organisms → Templates)
 **Contesto VIVO**: ogni nuova componente → aggiorna automaticamente:
 1. `.context/design-system.md` (fonte principale: token + props + esempi)
 2. Storybook story + play function
-3. Pipeline CI/CD se necessario
+3. `lighthouserc.js` → aggiungi URL della story principale per test a11y
+4. Pipeline CI/CD se necessario
+
+**Folder `.context/`**: contesto condiviso per AI IDE (Cursor, Windsurf, Copilot, ecc.)
+- Aggiorna sempre `.context/design-system.md` quando modifichi componenti/token
 
 **Per dettagli completi su token e componenti**: leggi `.context/design-system.md`
 
@@ -70,3 +74,5 @@ Fonte: [UI Kit Italia](https://www.figma.com/design/qMgiC0CQiPCSGo8B03CiC0/UI-Ki
 3. **Ogni componente = Story** - Con varianti e play function
 4. **Contrasto testo** - Usa `text-white` pieno, no opacità ridotte
 5. **Lighthouse CI** - Accessibility >= 0.95 obbligatorio
+6. **Aggiorna lighthouserc.js** - Aggiungi URL story: `{livello}-{componente}--{story}`
+7. **Aggiorna .context/** - Documenta props/varianti in `.context/design-system.md`

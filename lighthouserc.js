@@ -4,11 +4,24 @@ module.exports = {
     collect: {
       // Usa la build statica di Storybook come sorgente
       staticDistDir: './storybook-static',
-      // URL pattern per testare le story degli atoms e organisms
+      // URL pattern per testare le story di tutti i componenti
       // Ogni iframe.html?id=... corrisponde a una story renderizzata
+      // IMPORTANTE: Aggiornare questa lista quando si aggiunge un nuovo componente!
+      // Pattern: {livello}-{componente}--{story} in kebab-case
       url: [
+        // Atoms
+        'http://localhost/iframe.html?id=atoms-accordion--basic',
         'http://localhost/iframe.html?id=atoms-button--primary',
         'http://localhost/iframe.html?id=atoms-button--secondary',
+        'http://localhost/iframe.html?id=atoms-divider--default',
+        'http://localhost/iframe.html?id=atoms-icon--size-md',
+        'http://localhost/iframe.html?id=atoms-link--standalone',
+        'http://localhost/iframe.html?id=atoms-logo--default',
+        // Molecules
+        'http://localhost/iframe.html?id=molecules-link-group--default',
+        'http://localhost/iframe.html?id=molecules-social-links--default',
+        // Organisms
+        'http://localhost/iframe.html?id=organisms-footer--default',
         'http://localhost/iframe.html?id=organisms-hero--default',
       ],
       // Un solo run per URL: sufficiente per componenti statici
