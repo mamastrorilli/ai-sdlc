@@ -30,7 +30,7 @@ const faqItems: AccordionItemData[] = [
           <strong>UI Kit Italia</strong> per garantire accessibilità e coerenza
           visiva.
         </p>
-      </div>
+      </main>
     ),
   },
   {
@@ -251,7 +251,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white">
       {/* CLS Regression Injection */}
       {showCls && (
         <div 
