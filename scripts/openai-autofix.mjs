@@ -62,8 +62,13 @@ async function analyzeReport(reportPath, reportType) {
   
   const reportContent = readFileSync(reportPath, 'utf8');
   
-  const systemPrompt = `Sei un esperto di accessibilità web e performance. 
+  const systemPrompt = `Sei un esperto di accessibilità web e performance (Core Web Vitals). 
 Analizza report Lighthouse e genera fix concrete seguendo le best practice WCAG 2.1 AA e Core Web Vitals.
+
+ATTENZIONE SPECIALE AL CLS (Cumulative Layout Shift):
+- Identifica elementi che causano shift (immagini senza width/height, font che caricano tardi, contenuti dinamici).
+- Proponi fix come: aspect-ratio CSS, dimensioni esplicite, min-height per i wrapper.
+
 Rispondi SOLO con un JSON valido nel formato:
 {
   "issues": [
@@ -85,15 +90,15 @@ Rispondi SOLO con un JSON valido nel formato:
 
   const userPrompt = reportType === 'flow' 
     ? `Analizza questo report Lighthouse User Flow e identifica i problemi da fixare.
-Concentrati su: accessibilità, performance (CLS, LCP, FID), best practices.
-Per ogni problema, identifica il file sorgente in src/ e proponi una fix concreta.
+PRIORITÀ ASSOLUTA: Risolvi il CLS (Cumulative Layout Shift) se presente.
+Per ogni problema, identifica il file sorgente in src/ e proponi una fix concreta e robusta.
 
 REPORT:
 ${reportContent}
 
 Rispondi con JSON valido.`
     : `Analizza questo report Lighthouse CI per Storybook e identifica i problemi da fixare.
-Concentrati su: accessibilità (contrasto, ARIA, label), performance.
+Identifica problemi di accessibilità e shift di layout.
 Per ogni problema, identifica il componente in src/design-system/ e proponi una fix concreta.
 Usa SOLO i token definiti in tokens/ (mai hardcodare colori).
 
@@ -121,8 +126,6 @@ function applyFix(issue) {
   const filePath = join(process.cwd(), file);
   
   console.log(`🔧 Applicazione fix a: ${file}`);
-  console.log(`   Tipo: ${fix.type}`);
-  console.log(`   Motivo: ${fix.explanation}`);
   
   try {
     let content = readFileSync(filePath, 'utf8');
@@ -175,6 +178,7 @@ async function applyFixes(fixPlan) {
   
   let appliedCount = 0;
   const appliedFixes = [];
+  const modifiedFiles = new Set();
   
   for (const issue of sortedIssues) {
     console.log(`\n[${issue.severity.toUpperCase()}] ${issue.description}`);
@@ -186,12 +190,13 @@ async function applyFixes(fixPlan) {
         description: issue.description,
         explanation: issue.fix.explanation
       });
+      modifiedFiles.add(issue.file);
     }
   }
   
   console.log(`\n✨ Fix applicate: ${appliedCount}/${sortedIssues.length}`);
   
-  return { appliedCount, appliedFixes };
+  return { appliedCount, appliedFixes, modifiedFiles: Array.from(modifiedFiles) };
 }
 
 /**
@@ -274,18 +279,14 @@ async function main() {
       console.warn('⚠️  Impossibile configurare git user');
     }
     
-    // Verifica modifiche
-    const status = execSync('git status --porcelain').toString();
-    
-    if (!status.trim()) {
-      console.log('ℹ️  Nessuna modifica da committare');
-      process.exit(0);
+    // Committa SOLO i file sorgente modificati, non i report!
+    console.log('\n📦 Preparazione commit selettivo...');
+    for (const file of result.modifiedFiles) {
+      execSync(`git add "${file}"`);
     }
     
-    // Commit
+    // Messaggio di commit
     const commitMessage = generateCommitMessage(reportType, result);
-    
-    execSync('git add -A');
     execSync(`git commit -m "${commitMessage.replace(/"/g, '\\"')}"`);
     
     console.log('\n✅ Fix committate con successo!');
