@@ -99,8 +99,26 @@ function extractStepFailures(step) {
         selector: item.node?.selector || null,
         snippet: item.node?.snippet || null,
         explanation: item.node?.explanation || null,
+        nodeLabel: item.node?.nodeLabel || null,
+        path: item.node?.path || null,
+        boundingRect: item.node?.boundingRect || null,
+        // Color contrast specific
+        contrastRatio: item.contrastRatio || null,
+        expectedContrastRatio: item.expectedContrastRatio || null,
+        fontSize: item.fontSize || null,
+        fontWeight: item.fontWeight || null,
+        foreground: item.foreground || null,
+        background: item.background || null,
+        // General failure info
+        failureSummary: item.failureSummary || null,
+        // Related nodes (for context)
+        relatedNodes: item.relatedNodes?.map(rn => ({
+          selector: rn.node?.selector || null,
+          snippet: rn.node?.snippet || null,
+          nodeLabel: rn.node?.nodeLabel || null,
+        })).filter(rn => rn.selector || rn.snippet) || [],
       }))
-      .filter((i) => i.selector || i.snippet);
+      .filter((i) => i.selector || i.snippet || i.failureSummary);
 
     if (failingItems.length > 0 || audit.score === 0) {
       failures.push({
@@ -284,15 +302,65 @@ ${failure.displayValue ? `- **Details**: ${failure.displayValue}\n` : ''}
 `;
 
       if (failure.items.length > 0) {
-        body += `**Failing Elements:**\n`;
-        for (const item of failure.items.slice(0, 3)) {
-          body += `- \`${item.selector || 'N/A'}\`\n`;
-          if (item.snippet) {
-            body += `  \`\`\`html\n  ${item.snippet}\n  \`\`\`\n`;
+        body += `\n**Failing Elements (${failure.items.length} total):**\n\n`;
+        for (const [idx, item] of failure.items.slice(0, 5).entries()) {
+          body += `<details>\n<summary><strong>${idx + 1}. ${item.nodeLabel || item.selector || 'Element'}</strong></summary>\n\n`;
+
+          // Selector and path
+          if (item.selector) {
+            body += `**CSS Selector:** \`${item.selector}\`\n\n`;
           }
+          if (item.path) {
+            body += `**DOM Path:** \`${item.path}\`\n\n`;
+          }
+
+          // HTML Snippet
+          if (item.snippet) {
+            body += `**HTML:**\n\`\`\`html\n${item.snippet}\n\`\`\`\n\n`;
+          }
+
+          // Explanation (important for understanding the issue)
+          if (item.explanation) {
+            body += `**Problem:** ${item.explanation}\n\n`;
+          }
+
+          // Failure summary
+          if (item.failureSummary) {
+            body += `**Failure Summary:**\n> ${item.failureSummary.replace(/\n/g, '\n> ')}\n\n`;
+          }
+
+          // Color contrast specific details
+          if (item.contrastRatio !== null) {
+            body += `**Contrast Details:**\n`;
+            body += `| Property | Value |\n|----------|-------|\n`;
+            body += `| Current Ratio | ${item.contrastRatio?.toFixed(2) || 'N/A'}:1 |\n`;
+            body += `| Required Ratio | ${item.expectedContrastRatio || 'N/A'}:1 |\n`;
+            if (item.foreground) body += `| Foreground | \`${item.foreground}\` |\n`;
+            if (item.background) body += `| Background | \`${item.background}\` |\n`;
+            if (item.fontSize) body += `| Font Size | ${item.fontSize} |\n`;
+            if (item.fontWeight) body += `| Font Weight | ${item.fontWeight} |\n`;
+            body += `\n`;
+          }
+
+          // Bounding rect for visual reference
+          if (item.boundingRect) {
+            const rect = item.boundingRect;
+            body += `**Location:** top: ${rect.top}px, left: ${rect.left}px, width: ${rect.width}px, height: ${rect.height}px\n\n`;
+          }
+
+          // Related nodes
+          if (item.relatedNodes && item.relatedNodes.length > 0) {
+            body += `**Related Elements:**\n`;
+            for (const rn of item.relatedNodes.slice(0, 2)) {
+              body += `- \`${rn.selector || rn.nodeLabel || 'N/A'}\`\n`;
+            }
+            body += `\n`;
+          }
+
+          body += `</details>\n\n`;
         }
-        if (failure.items.length > 3) {
-          body += `- ... and ${failure.items.length - 3} more\n`;
+        if (failure.items.length > 5) {
+          body += `> **Note:** ${failure.items.length - 5} additional elements with the same issue not shown.\n\n`;
         }
       }
 
@@ -317,6 +385,28 @@ ${failure.displayValue ? `- **Details**: ${failure.displayValue}\n` : ''}
     }
   }
 
+  // Build specific issues summary for Claude Code
+  const issuesSummary = [];
+  for (const step of report.steps) {
+    for (const failure of step.failures) {
+      if (failure.items.length > 0) {
+        const firstItem = failure.items[0];
+        issuesSummary.push({
+          audit: failure.auditId,
+          selector: firstItem.selector,
+          snippet: firstItem.snippet,
+          explanation: firstItem.explanation || firstItem.failureSummary,
+          contrast: firstItem.contrastRatio ? {
+            current: firstItem.contrastRatio,
+            required: firstItem.expectedContrastRatio,
+            fg: firstItem.foreground,
+            bg: firstItem.background,
+          } : null,
+        });
+      }
+    }
+  }
+
   // Claude Code instructions
   body += `
 ---
@@ -338,6 +428,21 @@ Fix the Lighthouse User Flow issues in this repository.
 
 **Files to modify:**
 ${report.summary.affectedFiles.map(f => `- \`${f}\``).join('\n')}
+
+**Specific Issues to Fix:**
+${issuesSummary.slice(0, 5).map((issue, i) => {
+  let desc = `${i + 1}. **${issue.audit}**`;
+  if (issue.selector) desc += ` at \`${issue.selector}\``;
+  if (issue.explanation) desc += `\n   - Problem: ${issue.explanation.split('\n')[0]}`;
+  if (issue.contrast) {
+    desc += `\n   - Current contrast: ${issue.contrast.current?.toFixed(2)}:1 (needs ${issue.contrast.required}:1)`;
+    if (issue.contrast.fg && issue.contrast.bg) {
+      desc += `\n   - Colors: fg=${issue.contrast.fg}, bg=${issue.contrast.bg}`;
+    }
+  }
+  if (issue.snippet) desc += `\n   - Element: \`${issue.snippet.substring(0, 80)}${issue.snippet.length > 80 ? '...' : ''}\``;
+  return desc;
+}).join('\n')}
 
 **Focus areas:**
 1. Accessibility issues during page load
