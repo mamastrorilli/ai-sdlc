@@ -152,7 +152,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH_NAME="fix/lighthouse-a11y-${{ github.run_number }}"
+          BRANCH_NAME="fix/lighthouse-a11y-${{ github.run_number }}-${{ github.run_attempt }}"
           git checkout -b "$BRANCH_NAME"
           git push origin "$BRANCH_NAME"
 
