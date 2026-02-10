@@ -184,14 +184,24 @@ function executeWriteFile(args) {
       content = content.slice(1);
     }
 
+    // CRITICO: Rimuovi caratteri NUL che possono essere introdotti da
+    // problemi di encoding UTF-16/UTF-8 (specialmente su Windows)
+    content = content.replace(/\0/g, '');
+
+    // Normalizza line endings a LF (Unix style) per evitare problemi cross-platform
+    content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
     // Assicura newline finale se mancante
     if (content.length > 0 && !content.endsWith('\n')) {
       content += '\n';
     }
 
-    writeFileSync(filePath, content, 'utf8');
+    // Usa Buffer esplicito per garantire encoding UTF-8 corretto
+    const buffer = Buffer.from(content, 'utf8');
+    writeFileSync(filePath, buffer);
+
     modifiedFiles.add(args.path);
-    console.log(`📝 Scritto: ${args.path} (${content.length} bytes)`);
+    console.log(`📝 Scritto: ${args.path} (${buffer.length} bytes, NUL rimossi: ${args.content.length - content.length + (content.endsWith('\n') && !args.content.endsWith('\n') ? 1 : 0)})`);
     return { success: true, path: args.path };
   } catch (e) {
     return { error: e.message };
