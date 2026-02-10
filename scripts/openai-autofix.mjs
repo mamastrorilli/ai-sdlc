@@ -177,7 +177,6 @@ function executeWriteFile(args) {
       return { error: `Directory non esiste: ${dirname(args.path)}` };
     }
 
-    // Sanitizza il contenuto per evitare problemi di encoding
     let content = args.content;
 
     // Rimuovi BOM se presente
@@ -185,14 +184,8 @@ function executeWriteFile(args) {
       content = content.slice(1);
     }
 
-    // Normalizza line endings a LF (Unix style)
-    content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-
-    // Rimuovi caratteri null e altri caratteri di controllo problematici (eccetto newline e tab)
-    content = content.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
-
-    // Assicura newline finale
-    if (!content.endsWith('\n')) {
+    // Assicura newline finale se mancante
+    if (content.length > 0 && !content.endsWith('\n')) {
       content += '\n';
     }
 
@@ -365,6 +358,7 @@ async function callOpenAI(messages) {
 
 async function runAgent(reportContent, reportType) {
   const systemPrompt = `Sei un agente che corregge problemi di accessibilità e performance nei progetti web.
+Il progetto è in ITALIANO. È CRITICO mantenere tutti i testi originali, i commenti e i caratteri accentati (à, è, é, ì, ò, ù).
 
 Hai a disposizione questi tool:
 - read_file: leggi un file sorgente
@@ -378,26 +372,26 @@ Hai a disposizione questi tool:
 
 1. Leggi il report Lighthouse per capire i problemi
 2. Usa search_code o list_files per trovare i file coinvolti
-3. Usa read_file per vedere il codice attuale
+3. Usa read_file per vedere il codice attuale (PRESTA ATTENZIONE AI CARATTERI ACCENTATI)
 4. Usa write_file per applicare le fix (scrivi il file COMPLETO)
 5. Usa run_command con "yarn build" per verificare che compili
 6. Se la build fallisce, leggi l'errore e correggi
 7. Chiama task_complete quando hai finito
 
-## REGOLE
+## REGOLE MANDATORIE
 
-- Scrivi sempre file COMPLETI con write_file, non frammenti
-- Verifica sempre con yarn build dopo le modifiche
-- Se la build fallisce, analizza l'errore e correggi
-- Non inventare file che non esistono - usa list_files per esplorare
-- Fai fix MINIMALI - non riscrivere tutto il componente se basta aggiungere un alt
+- **PRESERVA L'ITALIANO**: Non tradurre mai i testi. Se vedi "accessibilità", NON scrivere "accessibility" o "accessibilit0".
+- **ESATTEZZA CARATTERI**: Quando riscrivi un file, mantieni esattamente i caratteri speciali del file originale.
+- **FILE COMPLETI**: Scrivi sempre file COMPLETI con write_file, non frammenti.
+- **VERIFICA**: Esegui sempre yarn build dopo le modifiche.
+- **FIX MINIMALI**: Non riscrivere tutto il componente se basta aggiungere un alt.
 
 ## FIX COMUNI
 
 **Accessibilità:**
-- Immagini senza alt → aggiungi alt descrittivo
-- Link vuoti → aggiungi aria-label
-- Contrasto basso → usa colori con contrasto >= 4.5:1
+- Immagini senza alt → aggiungi alt descrittivo (in italiano)
+- Link vuoti → aggiungi aria-label (in italiano)
+- Contrasto basso → usa colori con contrasto >= 4.5:1 (usa i token del design system)
 
 **Performance/CLS:**
 - Immagini senza dimensioni → aggiungi width/height
