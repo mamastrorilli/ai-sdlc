@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * OpenAI Auto-Fix Agent v3
- * Approccio agentico con Function Calling - l'AI può leggere, scrivere e testare in autonomia.
+ * OpenAI Auto-Fix Agent v4
+ * Usa edit_file (search/replace) invece di write_file per preservare l'encoding originale.
  */
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'fs';
@@ -16,7 +16,7 @@ const __dirname = dirname(__filename);
 // Configurazione
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const MODEL = process.env.OPENAI_MODEL || 'gpt-4o';
-const MAX_ITERATIONS = 10; // Limite per evitare loop infiniti
+const MAX_ITERATIONS = 10;
 
 if (!OPENAI_API_KEY) {
   console.error('❌ OPENAI_API_KEY non configurata');
@@ -48,8 +48,11 @@ const tools = [
   {
     type: 'function',
     function: {
-      name: 'write_file',
-      description: 'Scrive/sovrascrive un file con nuovo contenuto. Usa questo per applicare fix.',
+      name: 'edit_file',
+      description: `Modifica un file sostituendo una stringa con un'altra.
+IMPORTANTE: Usa questo invece di riscrivere l'intero file.
+Specifica ESATTAMENTE la stringa da cercare (old_string) e quella nuova (new_string).
+Il resto del file rimane invariato, preservando encoding e caratteri speciali.`,
       parameters: {
         type: 'object',
         properties: {
@@ -57,12 +60,16 @@ const tools = [
             type: 'string',
             description: 'Percorso relativo del file'
           },
-          content: {
+          old_string: {
             type: 'string',
-            description: 'Nuovo contenuto completo del file'
+            description: 'Stringa esatta da cercare e sostituire (deve essere unica nel file)'
+          },
+          new_string: {
+            type: 'string',
+            description: 'Nuova stringa che sostituirà old_string'
           }
         },
-        required: ['path', 'content']
+        required: ['path', 'old_string', 'new_string']
       }
     }
   },
@@ -70,7 +77,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'list_files',
-      description: 'Elenca i file in una directory. Utile per esplorare la struttura del progetto.',
+      description: 'Elenca i file in una directory.',
       parameters: {
         type: 'object',
         properties: {
@@ -91,7 +98,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'run_command',
-      description: 'Esegue un comando shell (build, lint, test). Usa per verificare che le fix funzionino.',
+      description: 'Esegue un comando shell (build, lint, test).',
       parameters: {
         type: 'object',
         properties: {
@@ -108,13 +115,13 @@ const tools = [
     type: 'function',
     function: {
       name: 'search_code',
-      description: 'Cerca un pattern nel codice sorgente. Ritorna i file che contengono il match.',
+      description: 'Cerca un pattern nel codice sorgente.',
       parameters: {
         type: 'object',
         properties: {
           pattern: {
             type: 'string',
-            description: 'Pattern da cercare (stringa o regex semplice)'
+            description: 'Pattern da cercare'
           },
           directory: {
             type: 'string',
@@ -129,7 +136,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'task_complete',
-      description: 'Chiama quando hai finito di applicare tutte le fix necessarie.',
+      description: 'Chiama quando hai finito di applicare tutte le fix.',
       parameters: {
         type: 'object',
         properties: {
@@ -168,40 +175,41 @@ function executeReadFile(args) {
   }
 }
 
-function executeWriteFile(args) {
+function executeEditFile(args) {
   const filePath = join(process.cwd(), args.path);
+
+  if (!existsSync(filePath)) {
+    return { error: `File non trovato: ${args.path}` };
+  }
+
   try {
-    // Verifica che la directory esista
-    const dir = dirname(filePath);
-    if (!existsSync(dir)) {
-      return { error: `Directory non esiste: ${dirname(args.path)}` };
+    // Leggi il file originale preservando l'encoding
+    const originalContent = readFileSync(filePath, 'utf8');
+
+    // Verifica che old_string esista nel file
+    if (!originalContent.includes(args.old_string)) {
+      // Prova a cercare con normalizzazione line endings
+      const normalizedContent = originalContent.replace(/\r\n/g, '\n');
+      const normalizedOld = args.old_string.replace(/\r\n/g, '\n');
+
+      if (!normalizedContent.includes(normalizedOld)) {
+        return {
+          error: `Stringa non trovata nel file. Assicurati che old_string sia esattamente come nel file originale.`,
+          hint: 'Usa read_file per vedere il contenuto esatto del file.'
+        };
+      }
+
+      // Applica la sostituzione sul contenuto normalizzato
+      const newContent = normalizedContent.replace(normalizedOld, args.new_string);
+      writeFileSync(filePath, newContent, 'utf8');
+    } else {
+      // Sostituzione diretta
+      const newContent = originalContent.replace(args.old_string, args.new_string);
+      writeFileSync(filePath, newContent, 'utf8');
     }
-
-    let content = args.content;
-
-    // Rimuovi BOM se presente
-    if (content.charCodeAt(0) === 0xFEFF) {
-      content = content.slice(1);
-    }
-
-    // CRITICO: Rimuovi caratteri NUL che possono essere introdotti da
-    // problemi di encoding UTF-16/UTF-8 (specialmente su Windows)
-    content = content.replace(/\0/g, '');
-
-    // Normalizza line endings a LF (Unix style) per evitare problemi cross-platform
-    content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-
-    // Assicura newline finale se mancante
-    if (content.length > 0 && !content.endsWith('\n')) {
-      content += '\n';
-    }
-
-    // Usa Buffer esplicito per garantire encoding UTF-8 corretto
-    const buffer = Buffer.from(content, 'utf8');
-    writeFileSync(filePath, buffer);
 
     modifiedFiles.add(args.path);
-    console.log(`📝 Scritto: ${args.path} (${buffer.length} bytes, NUL rimossi: ${args.content.length - content.length + (content.endsWith('\n') && !args.content.endsWith('\n') ? 1 : 0)})`);
+    console.log(`✏️  Modificato: ${args.path}`);
     return { success: true, path: args.path };
   } catch (e) {
     return { error: e.message };
@@ -235,14 +243,13 @@ function executeListFiles(args) {
 
   try {
     const files = listRecursive(dirPath, dirPath);
-    return { files: files.slice(0, 100) }; // Limita a 100 risultati
+    return { files: files.slice(0, 100) };
   } catch (e) {
     return { error: e.message };
   }
 }
 
 function executeRunCommand(args) {
-  // Whitelist di comandi sicuri
   const allowedCommands = ['yarn build', 'yarn lint', 'yarn test', 'yarn build-storybook', 'yarn tsc --noEmit'];
   const isAllowed = allowedCommands.some(cmd => args.command.startsWith(cmd));
 
@@ -306,7 +313,7 @@ function executeSearchCode(args) {
 function executeTool(name, args) {
   switch (name) {
     case 'read_file': return executeReadFile(args);
-    case 'write_file': return executeWriteFile(args);
+    case 'edit_file': return executeEditFile(args);
     case 'list_files': return executeListFiles(args);
     case 'run_command': return executeRunCommand(args);
     case 'search_code': return executeSearchCode(args);
@@ -320,96 +327,71 @@ function executeTool(name, args) {
 // ============================================================================
 
 async function callOpenAI(messages) {
-  console.log(`📡 Chiamata API OpenAI (model: ${MODEL})...`);
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages,
+      tools,
+      tool_choice: 'auto',
+      temperature: 0
+    })
+  });
 
-  const requestBody = {
-    model: MODEL,
-    messages,
-    tools,
-    tool_choice: 'auto',
-    temperature: 0
-  };
-
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify(requestBody)
-    });
-
-    console.log(`📡 Response status: ${response.status}`);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`❌ API Error Response: ${errorText}`);
-      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
-    }
-
-    const json = await response.json();
-
-    // Verifica struttura risposta
-    if (!json.choices || !json.choices[0]) {
-      console.error('❌ Risposta API inaspettata:', JSON.stringify(json, null, 2));
-      throw new Error('Risposta API senza choices');
-    }
-
-    console.log(`✅ API OK - finish_reason: ${json.choices[0].finish_reason}`);
-    return json;
-  } catch (error) {
-    if (error.message.includes('fetch')) {
-      console.error('❌ Errore di rete:', error.message);
-    }
-    throw error;
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
   }
+
+  return response.json();
 }
 
 async function runAgent(reportContent, reportType) {
-  const systemPrompt = `Sei un agente che corregge problemi di accessibilità e performance nei progetti web.
-Il progetto è in ITALIANO. È CRITICO mantenere tutti i testi originali, i commenti e i caratteri accentati (à, è, é, ì, ò, ù).
+  const systemPrompt = `Sei un agente che corregge problemi di accessibilità e performance.
 
-Hai a disposizione questi tool:
+## TOOLS DISPONIBILI
+
 - read_file: leggi un file sorgente
-- write_file: scrivi/modifica un file
+- edit_file: modifica un file con search/replace (USA QUESTO per le modifiche!)
 - list_files: elenca file in una directory
-- run_command: esegui comandi (yarn build, yarn lint, yarn test)
+- run_command: esegui comandi (yarn build, yarn lint)
 - search_code: cerca pattern nel codice
 - task_complete: chiama quando hai finito
 
+## IMPORTANTE: USA edit_file, NON riscrivere file interi!
+
+Per modificare un file, usa edit_file con:
+- old_string: la stringa ESATTA da sostituire (copia dal file letto)
+- new_string: la nuova stringa
+
+Esempio - aggiungere alt a un'immagine:
+1. read_file per vedere il codice
+2. edit_file con:
+   - old_string: '<img src="/hero.jpg" />'
+   - new_string: '<img src="/hero.jpg" alt="Descrizione immagine" />'
+
 ## WORKFLOW
 
-1. Leggi il report Lighthouse per capire i problemi
-2. Usa search_code o list_files per trovare i file coinvolti
-3. Usa read_file per vedere il codice attuale (PRESTA ATTENZIONE AI CARATTERI ACCENTATI)
-4. Usa write_file per applicare le fix (scrivi il file COMPLETO)
-5. Usa run_command con "yarn build" per verificare che compili
-6. Se la build fallisce, leggi l'errore e correggi
-7. Chiama task_complete quando hai finito
-
-## REGOLE MANDATORIE
-
-- **PRESERVA L'ITALIANO**: Non tradurre mai i testi. Se vedi "accessibilità", NON scrivere "accessibility" o "accessibilit0".
-- **ESATTEZZA CARATTERI**: Quando riscrivi un file, mantieni esattamente i caratteri speciali del file originale.
-- **FILE COMPLETI**: Scrivi sempre file COMPLETI con write_file, non frammenti.
-- **VERIFICA**: Esegui sempre yarn build dopo le modifiche.
-- **FIX MINIMALI**: Non riscrivere tutto il componente se basta aggiungere un alt.
+1. Leggi il report per capire i problemi
+2. Usa search_code o list_files per trovare i file
+3. Usa read_file per vedere il codice
+4. Usa edit_file per applicare FIX MINIMALI (solo ciò che serve)
+5. Usa run_command con "yarn build" per verificare
+6. Chiama task_complete quando hai finito
 
 ## FIX COMUNI
 
-**Accessibilità:**
-- Immagini senza alt → aggiungi alt descrittivo (in italiano)
-- Link vuoti → aggiungi aria-label (in italiano)
-- Contrasto basso → usa colori con contrasto >= 4.5:1 (usa i token del design system)
-
-**Performance/CLS:**
-- Immagini senza dimensioni → aggiungi width/height
-- Layout shift → riserva spazio con aspect-ratio o min-height`;
+- Immagini senza alt → aggiungi alt descrittivo
+- Link vuoti → aggiungi aria-label
+- Layout shift → aggiungi width/height alle immagini`;
 
   const messages = [
     { role: 'system', content: systemPrompt },
-    { role: 'user', content: `Ecco il report Lighthouse (${reportType}). Analizza e applica le fix necessarie:\n\n${reportContent}` }
+    { role: 'user', content: `Report Lighthouse (${reportType}):\n\n${reportContent}` }
   ];
 
   let iteration = 0;
@@ -423,21 +405,14 @@ Hai a disposizione questi tool:
     const choice = response.choices[0];
     const assistantMessage = choice.message;
 
-    // Aggiungi la risposta dell'assistente alla conversazione
     messages.push(assistantMessage);
 
-    // Se non ci sono tool calls, l'agente ha finito di "pensare"
     if (!assistantMessage.tool_calls || assistantMessage.tool_calls.length === 0) {
       console.log('💬 Agente:', assistantMessage.content || '(nessun messaggio)');
-
-      if (choice.finish_reason === 'stop') {
-        console.log('⚠️  Agente terminato senza chiamare task_complete');
-        break;
-      }
+      if (choice.finish_reason === 'stop') break;
       continue;
     }
 
-    // Esegui tutti i tool calls
     for (const toolCall of assistantMessage.tool_calls) {
       const { name, arguments: argsString } = toolCall.function;
       let args;
@@ -448,11 +423,10 @@ Hai a disposizione questi tool:
         args = {};
       }
 
-      console.log(`🔧 Tool: ${name}`, name !== 'write_file' ? args : { path: args.path });
+      console.log(`🔧 Tool: ${name}`, name === 'edit_file' ? { path: args.path } : args);
 
       const result = executeTool(name, args);
 
-      // Se task_complete, usciamo
       if (result.done) {
         taskResult = result;
         console.log('\n✅ Task completato!');
@@ -460,7 +434,6 @@ Hai a disposizione questi tool:
         break;
       }
 
-      // Aggiungi il risultato del tool
       messages.push({
         role: 'tool',
         tool_call_id: toolCall.id,
@@ -469,10 +442,6 @@ Hai a disposizione questi tool:
     }
 
     if (taskResult) break;
-  }
-
-  if (!taskResult && iteration >= MAX_ITERATIONS) {
-    console.log(`\n⚠️  Raggiunto limite di ${MAX_ITERATIONS} iterazioni`);
   }
 
   return {
@@ -501,14 +470,11 @@ async function main() {
 
   console.log('');
   console.log('═══════════════════════════════════════════════');
-  console.log('🤖 OpenAI Auto-Fix Agent v3');
+  console.log('🤖 OpenAI Auto-Fix Agent v4 (edit mode)');
   console.log('═══════════════════════════════════════════════');
   console.log(`📊 Report: ${reportPath}`);
-  console.log(`📁 Tipo: ${reportType || 'generic'}`);
-  console.log(`🔑 API Key: ${OPENAI_API_KEY ? `...${OPENAI_API_KEY.slice(-4)}` : 'MANCANTE'}`);
   console.log(`🤖 Model: ${MODEL}`);
   console.log('═══════════════════════════════════════════════');
-  console.log('');
 
   const reportContent = readFileSync(reportPath, 'utf8');
 
@@ -516,13 +482,11 @@ async function main() {
     const result = await runAgent(reportContent, reportType || 'lighthouse');
 
     if (result.filesModified.length > 0) {
-      // Git commit
-      console.log('📦 Creazione commit...');
+      console.log('\n📦 Creazione commit...');
       execSync('git config user.name "openai-agent[bot]"');
       execSync('git config user.email "openai-agent[bot]@users.noreply.github.com"');
 
       result.filesModified.forEach(f => {
-        console.log(`  git add "${f}"`);
         execSync(`git add "${f}"`);
       });
 
@@ -537,16 +501,7 @@ async function main() {
     }
 
   } catch (error) {
-    console.error('');
-    console.error('═══════════════════════════════════════════════');
-    console.error('❌ ERRORE CRITICO');
-    console.error('═══════════════════════════════════════════════');
-    console.error('Messaggio:', error.message);
-    if (error.stack) {
-      console.error('Stack:', error.stack.split('\n').slice(0, 5).join('\n'));
-    }
-    console.error('═══════════════════════════════════════════════');
-    console.error('');
+    console.error('❌ Errore:', error.message);
     console.error('has_fixes=false');
     process.exit(1);
   }
