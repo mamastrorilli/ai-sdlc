@@ -313,3 +313,6 @@ export function Hero({
 }
 
 export default Hero;
+
+<section aria-labelledby="_R_2avb_" class="overflow-hidden bg-[var(--color-primary-500)] text-white" style="min-height: 850px;">
+<img alt="Neural network and artificial intelligence conceptual background" loading="lazy" decoding="async" data-nimg="fill" class="object-cover" style="position: absolute; height: 100%; width: 100%; inset: 0px;" sizes="(max-width: 768px) 100vw, 50vw" srcset="/_next/image?url=%2Fimages%2Fhero-banner-hp.jpg&amp;w=384&amp;q=75 384w, /_next/im…" src="http://localhost:3000/_next/image?url=%2Fimages%2Fhero-banner-hp.jpg&amp;w=750…" width="412" height="400">
