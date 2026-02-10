@@ -34,6 +34,13 @@ Organizzata sotto `src/design-system/` con la seguente struttura:
 - **`.context/sdlc.md`**: Definisce le tappe del "Figma → Code → Docs" workflow.
 - **`.context/skills/`**: Script e istruzioni specializzate (Figma integration, Design Rules).
 
+### 4. Auto-Fix con OpenAI API
+Il sistema include un meccanismo di **auto-fix automatico** basato su OpenAI GPT-4o:
+- **`scripts/openai-autofix.mjs`**: Script che analizza i report Lighthouse e applica fix automatiche.
+- **GitHub Actions Integration**: I workflow eseguono auto-fix su problemi di accessibilità e performance.
+- **Configurazione**: Richiede `OPENAI_API_KEY` configurata come GitHub Secret.
+- **Documentazione**: Vedi [`docs/openai-setup.md`](./docs/openai-setup.md) per la configurazione completa.
+
 ---
 
 ## 🔄 Il Workflow "Figma → AI → Code"
