@@ -306,3 +306,6 @@ export default function Home() {
     </div>
   );
 }
+
+<main role="main">
+<link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">

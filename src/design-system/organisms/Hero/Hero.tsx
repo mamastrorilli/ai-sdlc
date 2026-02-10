@@ -313,3 +313,5 @@ export function Hero({
 }
 
 export default Hero;
+
+style={{ minHeight: '850px' }}

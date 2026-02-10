@@ -1,0 +1,211 @@
+{
+  "generatedAt": "2026-02-10T17:19:40.229Z",
+  "pipelineType": "web-app",
+  "summary": {
+    "totalIssues": 9,
+    "steps": [
+      {
+        "name": "Navigation report (localhost/)",
+        "performance": 73,
+        "accessibility": 98
+      },
+      {
+        "name": "Timespan report (localhost/)",
+        "performance": 100,
+        "accessibility": null
+      }
+    ],
+    "byAudit": {
+      "layout-shifts": 1,
+      "landmark-one-main": 1,
+      "unused-javascript": 1,
+      "cls-culprits-insight": 1,
+      "image-delivery-insight": 1,
+      "lcp-discovery-insight": 1,
+      "legacy-javascript-insight": 1,
+      "network-dependency-tree-insight": 1,
+      "render-blocking-insight": 1
+    },
+    "affectedFiles": [
+      "src/app/page.tsx",
+      "src/design-system/organisms/Hero/Hero.tsx",
+      "src/design-system/organisms/Footer/Footer.tsx"
+    ]
+  },
+  "steps": [
+    {
+      "name": "Navigation report (localhost/)",
+      "url": "http://localhost:3000/",
+      "pagePath": "/",
+      "componentFiles": [
+        "src/app/page.tsx",
+        "src/design-system/organisms/Hero/Hero.tsx",
+        "src/design-system/organisms/Footer/Footer.tsx"
+      ],
+      "performance": 73,
+      "accessibility": 98,
+      "failures": [
+        {
+          "auditId": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "1 layout shift found",
+          "items": [
+            {
+              "selector": "body.titillium_web_79d31269-module__n7szFG__variable > div.min-h-screen > section.overflow-hidden",
+              "snippet": "<section aria-labelledby=\"_R_2avb_\" class=\"overflow-hidden bg-[var(--color-primary-500)] text-white  \">",
+              "explanation": null,
+              "nodeLabel": "DESIGN SYSTEM\nAI SDLC\n\nUn Design System moderno costruito con AI-assisted devel…",
+              "path": "2,HTML,1,BODY,1,DIV,1,SECTION",
+              "boundingRect": {
+                "top": 400,
+                "bottom": 1250,
+                "left": 0,
+                "right": 412,
+                "width": 412,
+                "height": 850
+              },
+              "contrastRatio": null,
+              "expectedContrastRatio": null,
+              "fontSize": null,
+              "fontWeight": null,
+              "foreground": null,
+              "background": null,
+              "failureSummary": null,
+              "relatedNodes": []
+            }
+          ],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "landmark-one-main",
+          "title": "Document does not have a main landmark.",
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "selector": "html",
+              "snippet": "<html lang=\"it\">",
+              "explanation": "Fix all of the following:\n  Document does not have a main landmark",
+              "nodeLabel": "html",
+              "path": "2,HTML",
+              "boundingRect": {
+                "top": 0,
+                "bottom": 3086,
+                "left": 0,
+                "right": 412,
+                "width": 412,
+                "height": 3086
+              },
+              "contrastRatio": null,
+              "expectedContrastRatio": null,
+              "fontSize": null,
+              "fontWeight": null,
+              "foreground": null,
+              "background": null,
+              "failureSummary": null,
+              "relatedNodes": []
+            }
+          ],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 51 KiB",
+          "items": [],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": null,
+          "items": [],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5,
+          "displayValue": "Est savings of 8 KiB",
+          "items": [
+            {
+              "selector": "div.w-full > div.flex > div.flex-1 > img.object-cover",
+              "snippet": "<img alt=\"Neural network and artificial intelligence conceptual background\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\" object-cover\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(max-width: 768px) 100vw, 50vw\" srcset=\"/_next/image?url=%2Fimages%2Fhero-banner-hp.jpg&amp;w=384&amp;q=75 384w, /_next/im…\" src=\"http://localhost:3000/_next/image?url=%2Fimages%2Fhero-banner-hp.jpg&amp;w=750…\">",
+              "explanation": null,
+              "nodeLabel": "Neural network and artificial intelligence conceptual background",
+              "path": "2,HTML,1,BODY,1,DIV,1,SECTION,0,DIV,0,DIV,1,DIV,0,IMG",
+              "boundingRect": {
+                "top": 850,
+                "bottom": 1250,
+                "left": 0,
+                "right": 412,
+                "width": 412,
+                "height": 400
+              },
+              "contrastRatio": null,
+              "expectedContrastRatio": null,
+              "fontSize": null,
+              "fontWeight": null,
+              "foreground": null,
+              "background": null,
+              "failureSummary": null,
+              "relatedNodes": []
+            }
+          ],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "lcp-discovery-insight",
+          "title": "LCP request discovery",
+          "score": 0,
+          "displayValue": null,
+          "items": [],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 13 KiB",
+          "items": [],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": null,
+          "items": [],
+          "fixSuggestions": null
+        },
+        {
+          "auditId": "render-blocking-insight",
+          "title": "Render blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 110 ms",
+          "items": [],
+          "fixSuggestions": null
+        }
+      ]
+    },
+    {
+      "name": "Timespan report (localhost/)",
+      "url": "http://localhost:3000/",
+      "pagePath": "/",
+      "componentFiles": [
+        "src/app/page.tsx",
+        "src/design-system/organisms/Hero/Hero.tsx",
+        "src/design-system/organisms/Footer/Footer.tsx"
+      ],
+      "performance": 100,
+      "accessibility": null,
+      "failures": []
+    }
+  ],
+  "recommendations": [
+    "Run yarn test-storybook:ci for detailed a11y tests"
+  ]
+}
