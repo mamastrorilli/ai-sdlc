@@ -297,27 +297,50 @@ function executeTool(name, args) {
 // ============================================================================
 
 async function callOpenAI(messages) {
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENAI_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      messages,
-      tools,
-      tool_choice: 'auto',
-      temperature: 0
-    })
-  });
+  console.log(`📡 Chiamata API OpenAI (model: ${MODEL})...`);
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`OpenAI API error: ${response.status} - ${error}`);
+  const requestBody = {
+    model: MODEL,
+    messages,
+    tools,
+    tool_choice: 'auto',
+    temperature: 0
+  };
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    console.log(`📡 Response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`❌ API Error Response: ${errorText}`);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
+    }
+
+    const json = await response.json();
+
+    // Verifica struttura risposta
+    if (!json.choices || !json.choices[0]) {
+      console.error('❌ Risposta API inaspettata:', JSON.stringify(json, null, 2));
+      throw new Error('Risposta API senza choices');
+    }
+
+    console.log(`✅ API OK - finish_reason: ${json.choices[0].finish_reason}`);
+    return json;
+  } catch (error) {
+    if (error.message.includes('fetch')) {
+      console.error('❌ Errore di rete:', error.message);
+    }
+    throw error;
   }
-
-  return response.json();
 }
 
 async function runAgent(reportContent, reportType) {
@@ -452,9 +475,15 @@ async function main() {
     process.exit(1);
   }
 
+  console.log('');
+  console.log('═══════════════════════════════════════════════');
   console.log('🤖 OpenAI Auto-Fix Agent v3');
+  console.log('═══════════════════════════════════════════════');
   console.log(`📊 Report: ${reportPath}`);
   console.log(`📁 Tipo: ${reportType || 'generic'}`);
+  console.log(`🔑 API Key: ${OPENAI_API_KEY ? `...${OPENAI_API_KEY.slice(-4)}` : 'MANCANTE'}`);
+  console.log(`🤖 Model: ${MODEL}`);
+  console.log('═══════════════════════════════════════════════');
   console.log('');
 
   const reportContent = readFileSync(reportPath, 'utf8');
@@ -464,22 +493,37 @@ async function main() {
 
     if (result.filesModified.length > 0) {
       // Git commit
+      console.log('📦 Creazione commit...');
       execSync('git config user.name "openai-agent[bot]"');
       execSync('git config user.email "openai-agent[bot]@users.noreply.github.com"');
 
-      result.filesModified.forEach(f => execSync(`git add "${f}"`));
+      result.filesModified.forEach(f => {
+        console.log(`  git add "${f}"`);
+        execSync(`git add "${f}"`);
+      });
 
       const commitMsg = `fix: auto-fix lighthouse issues (agent)\n\n${result.summary}\n\nFiles: ${result.filesModified.join(', ')}`;
       execSync(`git commit -m "${commitMsg.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`);
 
-      console.log('\n📦 Commit creato');
+      console.log('✅ Commit creato');
       console.log('has_fixes=true');
     } else {
-      console.log('\nhas_fixes=false');
+      console.log('\n⚠️ Nessun file modificato');
+      console.log('has_fixes=false');
     }
 
   } catch (error) {
-    console.error('❌ Errore:', error.message);
+    console.error('');
+    console.error('═══════════════════════════════════════════════');
+    console.error('❌ ERRORE CRITICO');
+    console.error('═══════════════════════════════════════════════');
+    console.error('Messaggio:', error.message);
+    if (error.stack) {
+      console.error('Stack:', error.stack.split('\n').slice(0, 5).join('\n'));
+    }
+    console.error('═══════════════════════════════════════════════');
+    console.error('');
+    console.error('has_fixes=false');
     process.exit(1);
   }
 }
