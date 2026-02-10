@@ -176,9 +176,29 @@ function executeWriteFile(args) {
     if (!existsSync(dir)) {
       return { error: `Directory non esiste: ${dirname(args.path)}` };
     }
-    writeFileSync(filePath, args.content, 'utf8');
+
+    // Sanitizza il contenuto per evitare problemi di encoding
+    let content = args.content;
+
+    // Rimuovi BOM se presente
+    if (content.charCodeAt(0) === 0xFEFF) {
+      content = content.slice(1);
+    }
+
+    // Normalizza line endings a LF (Unix style)
+    content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+    // Rimuovi caratteri null e altri caratteri di controllo problematici (eccetto newline e tab)
+    content = content.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+
+    // Assicura newline finale
+    if (!content.endsWith('\n')) {
+      content += '\n';
+    }
+
+    writeFileSync(filePath, content, 'utf8');
     modifiedFiles.add(args.path);
-    console.log(`📝 Scritto: ${args.path}`);
+    console.log(`📝 Scritto: ${args.path} (${content.length} bytes)`);
     return { success: true, path: args.path };
   } catch (e) {
     return { error: e.message };
