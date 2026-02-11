@@ -52,6 +52,8 @@ export interface HeroProps {
   imagePosition?: 'left' | 'right';
   /** Se true, l'immagine occupa tutta l'altezza della sezione senza padding (solo per withImage) */
   imageFlush?: boolean;
+  /** Priority per precaricamento immagine (LCP optimization) */
+  imagePriority?: boolean;
   /** Contenuto custom aggiuntivo */
   children?: ReactNode;
   /** Classe CSS aggiuntiva */
@@ -131,6 +133,7 @@ export function Hero({
   imageAlt = '',
   imagePosition = 'right',
   imageFlush = false,
+  imagePriority = false,
   children,
   className = '',
 }: HeroProps) {
@@ -263,6 +266,7 @@ export function Hero({
                   src={imageUrl}
                   alt={imageAlt}
                   fill
+                  priority={imagePriority}
                   className={`${
                     imageFlush ? '' : 'rounded-lg shadow-lg'
                   } object-cover`}
