@@ -32,13 +32,13 @@ export interface BackToTopProps extends ButtonHTMLAttributes<HTMLButtonElement> 
 
 const variantStyles: Record<BackToTopVariant, string> = {
   light: [
-    'bg-[#CCCCCC] text-[#AAAAAA]',
-    'hover:bg-[#BBBBBB]',
-    'active:bg-[#AAAAAA]',
+    'bg-[var(--color-primary-500)] text-white',
+    'hover:bg-[var(--color-primary-600)]',
+    'active:bg-[var(--color-primary-700)]',
   ].join(' '),
   dark: [
-    'bg-[#F0F0F0] text-[#D0D0D0]',
-    'hover:bg-[#E8E8E8]',
+    'bg-white text-[var(--color-primary-500)]',
+    'hover:bg-[var(--color-neutral-100)]',
   ].join(' '),
 };
 
@@ -99,7 +99,7 @@ export const BackToTop = forwardRef<HTMLButtonElement, BackToTopProps>(
 
     const buttonClasses = [
       'fixed bottom-6 right-6 z-[var(--z-fixed)]',
-      'rounded-full flex items-center justify-center',
+      'rounded-full flex items-center justify-center cursor-pointer',
       'transition-all duration-300',
       'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-primary-500)]',
       isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none',
