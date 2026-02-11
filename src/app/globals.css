@@ -433,15 +433,9 @@ small, .small, .caption {
   line-height: var(--line-height-loose);
 }
 
-/* Links*/
+/* Links base - hover gestito dai componenti Link/Button del design system */
 a {
   font-weight: var(--font-weight-semibold);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-a:hover {
-  color: var(--text-link-hover);
 }
 
 /* Code */

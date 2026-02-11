@@ -63,10 +63,10 @@ const baseStyles = [
  */
 const variantStyles: Record<ButtonVariant, string> = {
   primary: [
-    'bg-[var(--color-primary-500)] text-white/40', // REGRESSIONE A11Y: contrasto insufficiente
+    'bg-[var(--color-primary-500)] text-white',
     'hover:bg-[var(--color-primary-600)]',
     'active:bg-[var(--color-primary-700)]',
-    // REGRESSIONE A11Y: rimosso focus-visible ring
+    'focus-visible:ring-[var(--color-primary-500)] focus-visible:ring-offset-white',
   ].join(' '),
 
   secondary: [
@@ -113,8 +113,8 @@ const variantStyles: Record<ButtonVariant, string> = {
   ].join(' '),
 
   tertiaryInverted: [
-    'bg-transparent text-white/90',
-    'hover:text-white hover:bg-white/10',
+    'bg-transparent text-white',
+    'hover:bg-white/10',
     'focus-visible:ring-white focus-visible:ring-offset-[var(--color-primary-500)]',
   ].join(' '),
 };
