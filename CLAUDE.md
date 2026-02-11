@@ -8,8 +8,7 @@ Architettura: Atomic Design (Atoms → Molecules → Organisms → Templates)
 **Contesto VIVO**: ogni nuova componente → aggiorna automaticamente:
 1. `.context/design-system.md` (fonte principale: token + props + esempi)
 2. Storybook story + play function
-3. `lighthouserc.js` → aggiungi URL della story principale per test a11y
-4. Pipeline CI/CD se necessario
+3. Pipeline CI/CD se necessario
 
 **Folder `.context/`**: contesto condiviso per AI IDE (Cursor, Windsurf, Copilot, ecc.)
 - Aggiorna sempre `.context/design-system.md` quando modifichi componenti/token
@@ -37,10 +36,10 @@ I workflow girano su push/PR verso: `main`, `dev`, `test`
 
 ### Pipeline Design System (`.github/workflows/storybook-tests.yml`)
 ```
-Install → Build Storybook → Test a11y (axe-core) → Lighthouse CI
+Install → Build Storybook → Test a11y (axe-core)
   ↓ (se fallisce)
-  Claude Code Auto-Fix → Push fix sulla branch PR / Crea PR di fix
-  ↓ (se auto-fix fallisce)
+  Claude Code Auto-Fix → Push fix sulla branch PR
+  ↓ (se push diretto, auto-fix non disponibile)
   Crea GitHub Issue per fix manuale
   ↓ (se passa, solo su main)
   Deploy GitHub Pages
@@ -58,20 +57,24 @@ Build → Lighthouse User Flow
 ```
 
 ### Auto-Fix Agent
-Quando i check Lighthouse falliscono, un agente Claude Code:
-1. Analizza il report generato
+Quando i test di accessibilità falliscono, un agente Claude Code:
+1. Analizza il report generato (axe-core per Storybook, Lighthouse per Web App)
 2. Trova i file coinvolti nel codebase
-3. Applica fix di accessibilità/performance
-4. Committa e pusha (sulla PR esistente o crea nuova PR)
+3. Applica fix di accessibilità
+4. Committa e pusha sulla branch PR
 
 **Requisito**: Secret `ANTHROPIC_API_KEY` configurato nel repository.
 
-### Soglie Lighthouse
+### Soglie (Web App - Lighthouse)
 | Metrica | Soglia | Blocca? |
 |---------|--------|---------|
 | Accessibility | >= 0.95 | Si |
 | Performance | >= 0.9 | Warning |
 | Best Practices | >= 0.9 | Warning |
+
+### Test Accessibilità (Design System - axe-core)
+- Tutti i test axe-core devono passare
+- WCAG 2.1 AA compliance obbligatoria
 
 ## DESIGN TOKENS (quick reference)
 
@@ -101,6 +104,5 @@ Fonte: [UI Kit Italia](https://www.figma.com/design/qMgiC0CQiPCSGo8B03CiC0/UI-Ki
 2. **Accessibilità WCAG AA** - Contrasto minimo, ARIA labels
 3. **Ogni componente = Story** - Con varianti e play function
 4. **Contrasto testo** - Usa `text-white` pieno, no opacità ridotte
-5. **Lighthouse CI** - Accessibility >= 0.95 obbligatorio
-6. **Aggiorna lighthouserc.js** - Aggiungi URL story: `{livello}-{componente}--{story}`
-7. **Aggiorna .context/** - Documenta props/varianti in `.context/design-system.md`
+5. **Test axe-core** - Tutti i test di accessibilità devono passare
+6. **Aggiorna .context/** - Documenta props/varianti in `.context/design-system.md`
