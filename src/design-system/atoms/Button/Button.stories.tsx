@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import { ArrowRight, Plus } from 'lucide-react';
 import { Button } from './Button';
 import { Icon } from '../Icon';
@@ -67,11 +68,40 @@ type Story = StoryObj<typeof Button>;
 
 /**
  * Variante Primary - Azione principale
+ * Include test di accessibilità da tastiera
  */
 export const Primary: Story = {
   args: {
     variant: 'primary',
     children: 'Azione principale',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Azione principale' });
+
+    // Test 1: Il bottone è focusabile da tastiera
+    await userEvent.tab();
+    expect(button).toHaveFocus();
+
+    // Test 2: Verifica che il focus ring sia visibile (box-shadow o outline)
+    const styles = window.getComputedStyle(button);
+    const hasVisibleFocusIndicator =
+      styles.outline !== 'none' ||
+      styles.outlineWidth !== '0px' ||
+      styles.boxShadow !== 'none';
+    expect(hasVisibleFocusIndicator).toBe(true);
+
+    // Test 3: Il bottone risponde a Enter
+    let clicked = false;
+    button.addEventListener('click', () => (clicked = true), { once: true });
+    await userEvent.keyboard('{Enter}');
+    expect(clicked).toBe(true);
+
+    // Test 4: Il bottone risponde a Space
+    clicked = false;
+    button.addEventListener('click', () => (clicked = true), { once: true });
+    await userEvent.keyboard(' ');
+    expect(clicked).toBe(true);
   },
 };
 

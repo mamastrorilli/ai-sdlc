@@ -1,6 +1,4 @@
 'use client';
-import { useState, useEffect } from 'react';
-
 import { Github, Linkedin, BookOpen, FileCode } from 'lucide-react';
 import { Hero, Footer } from '@/design-system/organisms';
 import { Accordion, type AccordionItemData } from '@/design-system/atoms';
@@ -240,61 +238,45 @@ const socialLinks: SocialLinkItem[] = [
 ];
 
 export default function Home() {
-  const [showCls, setShowCls] = useState(false);
-
-  useEffect(() => {
-    // Delay to simulate late content loading causing CLS
-    const timer = setTimeout(() => {
-      setShowCls(true);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <div className="min-h-screen bg-white">
-      {/* CLS Regression Injection */}
-      {showCls && (
-        <div 
-          className="w-full bg-red-500 text-white flex items-center justify-center font-bold text-2xl"
-          style={{ height: '400px' }}
-        >
-          CLS REGRESSION INJECTED
-        </div>
-      )}
-      {/* Hero Section */}
-      <Hero
-        variant="withImage"
-        imageFlush
-        size="lg"
-        background="primary"
-        kicker="Design System"
-        title="AI SDLC"
-        subtitle="Un Design System moderno costruito con AI-assisted development. Integrazione Figma, componenti accessibili e pipeline CI/CD automatizzata."
-        actions={[
-          { label: 'Storybook', href: STORYBOOK_URL },
-          { label: 'GitHub', href: GITHUB_URL },
-        ]}
-        imageUrl="/images/hero-banner-hp.jpg"
-        imageAlt="Neural network and artificial intelligence conceptual background"
-      />
+      <main>
+        {/* Hero Section */}
+        <Hero
+          variant="withImage"
+          imageFlush
+          size="lg"
+          background="primary"
+          kicker="Design System"
+          title="AI SDLC"
+          subtitle="Un Design System moderno costruito con AI-assisted development. Integrazione Figma, componenti accessibili e pipeline CI/CD automatizzata."
+          actions={[
+            { label: 'Storybook', href: STORYBOOK_URL },
+            { label: 'GitHub', href: GITHUB_URL },
+          ]}
+          imageUrl="/images/hero-banner-hp.jpg"
+          imageAlt="Neural network and artificial intelligence conceptual background"
+          imagePriority
+        />
 
-      {/* FAQ Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[var(--color-neutral-900)]">
-            Cosa è stato implementato
-          </h2>
-          <p className="text-lg text-center text-[var(--color-neutral-600)] mb-12">
-            Scopri tutte le funzionalità e tecnologie del progetto
-          </p>
+        {/* FAQ Section */}
+        <section className="py-16 md:py-24">
+          <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[var(--color-neutral-900)]">
+              Cosa è stato implementato
+            </h2>
+            <p className="text-lg text-center text-[var(--color-neutral-600)] mb-12">
+              Scopri tutte le funzionalità e tecnologie del progetto
+            </p>
 
-          <Accordion
-            variant="activeBackground"
-            items={faqItems}
-            allowMultiple
-          />
-        </div>
-      </section>
+            <Accordion
+              variant="activeBackground"
+              items={faqItems}
+              allowMultiple
+            />
+          </div>
+        </section>
+      </main>
 
       {/* Footer */}
       <Footer

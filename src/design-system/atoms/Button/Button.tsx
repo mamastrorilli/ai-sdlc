@@ -113,8 +113,8 @@ const variantStyles: Record<ButtonVariant, string> = {
   ].join(' '),
 
   tertiaryInverted: [
-    'bg-transparent text-white/90',
-    'hover:text-white hover:bg-white/10',
+    'bg-transparent text-white',
+    'hover:bg-white/10',
     'focus-visible:ring-white focus-visible:ring-offset-[var(--color-primary-500)]',
   ].join(' '),
 };
