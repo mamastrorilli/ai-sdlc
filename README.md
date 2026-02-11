@@ -34,6 +34,12 @@ Organizzata sotto `src/design-system/` con la seguente struttura:
 - **`.context/sdlc.md`**: Definisce le tappe del "Figma → Code → Docs" workflow.
 - **`.context/skills/`**: Script e istruzioni specializzate (Figma integration, Design Rules).
 
+### 4. Auto-Fix con Claude
+Il sistema include un meccanismo di **auto-fix automatico** basato su Claude (Anthropic):
+- **`anthropics/claude-code-action`**: GitHub Action ufficiale che analizza i report Lighthouse e applica fix automatiche.
+- **GitHub Actions Integration**: I workflow eseguono auto-fix su problemi di accessibilità e performance.
+- **Configurazione**: Richiede `ANTHROPIC_API_KEY` configurata come GitHub Secret.
+
 ---
 
 ## 🔄 Il Workflow "Figma → AI → Code"

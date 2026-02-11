@@ -2,15 +2,16 @@ name: Web App Quality & Release
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev, test]
   pull_request:
-    branches: [main]
+    branches: [main, dev, test]
 
-# Permessi necessari per Issue creation e commenti
+# Permessi necessari per Issue creation, commenti, push auto-fix e OIDC token per Claude
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
+  id-token: write
 
 jobs:
   lighthouse-check:
@@ -21,6 +22,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -65,8 +69,52 @@ jobs:
             flow-report.json
             flow-issue.md
 
-      # Crea GitHub Issue con contesto per Claude Code auto-fix
-      - name: Create GitHub Issue for Auto-Fix
+      # Auto-fix con Claude - analizza report e propone fix
+      # NOTA: claude-code-action supporta solo pull_request, non push
+      - name: Auto-Fix with Claude
+        if: steps.lighthouse.outcome == 'failure' && steps.report.outputs.has_report == 'true' && github.event_name == 'pull_request'
+        id: autofix
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Leggi il file flow-issue.md che contiene un report Lighthouse con problemi di accessibilità.
+
+            Per ogni problema:
+            1. Trova il file sorgente coinvolto
+            2. Applica la fix minima necessaria
+            3. Verifica con `yarn build` che compili
+
+            Regole:
+            - Se modifichi tag HTML/JSX, mantieni il bilanciamento (apertura + chiusura)
+            - Non tradurre i testi italiani
+            - Fix minimali, non riscrivere componenti interi
+          claude_args: |
+            --allowedTools "Read,Edit,Bash(yarn build),Bash(yarn lint)"
+            --max-turns 15
+        continue-on-error: true
+
+      # Committa e pusha le fix (solo su PR, dove Claude auto-fix può girare)
+      - name: Commit and Push Auto-Fix
+        if: github.event_name == 'pull_request'
+        id: check_fixes
+        run: |
+          if git diff --quiet; then
+            echo "has_fixes=false" >> $GITHUB_OUTPUT
+          else
+            git config user.name "claude-code[bot]"
+            git config user.email "claude-code[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "fix: auto-fix lighthouse accessibility issues
+
+            Co-Authored-By: Claude <noreply@anthropic.com>"
+            git push origin ${{ github.head_ref }}
+            echo "::notice::Auto-fix pushed to branch ${{ github.head_ref }}"
+            echo "has_fixes=true" >> $GITHUB_OUTPUT
+          fi
+
+      # Crea GitHub Issue per fix manuale (solo su push, dove Claude auto-fix non può girare)
+      - name: Create GitHub Issue for Manual Fix
         if: steps.lighthouse.outcome == 'failure' && github.event_name == 'push' && steps.report.outputs.has_report == 'true'
         uses: actions/github-script@v7
         with:
@@ -109,7 +157,7 @@ jobs:
               repo: context.repo.repo,
               title: title,
               body: body,
-              labels: ['accessibility', 'lighthouse', 'auto-fix', 'claude-code', 'web-app'],
+              labels: ['accessibility', 'lighthouse', 'auto-fix', 'claude', 'web-app'],
               assignees: [context.actor]  // Assegna a chi ha fatto il commit
             });
 
