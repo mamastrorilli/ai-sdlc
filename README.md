@@ -19,11 +19,11 @@ Organizzata sotto `src/design-system/` con la seguente struttura:
 
 ### 2. Storybook & Quality Pipeline
 - **Storybook 10**: Configurato per Next.js 16 e Tailwind v4. Supporta nativamente le `Play functions` per il testing delle interazioni.
+- **Accessibility Testing**: `@storybook/addon-vitest` con axe-core per validazione WCAG 2.1 AA.
 - **CI/CD Quality Gates**:
   - `yarn lint`: ESLint con regole Next.js e Storybook.
   - `yarn check`: Validazione tipi TypeScript.
-  - `yarn test`: Unit testing con Vitest.
-  - `yarn test-storybook`: Test runner per le interazioni UI.
+  - `yarn test`: Test accessibilità Storybook con Vitest + axe-core.
   - `yarn format`: Prettier per la consistenza del codice.
 
 ### 3. Infrastruttura "AI Context" (VIVO)
@@ -36,8 +36,9 @@ Organizzata sotto `src/design-system/` con la seguente struttura:
 
 ### 4. Auto-Fix con Claude
 Il sistema include un meccanismo di **auto-fix automatico** basato su Claude (Anthropic):
-- **`anthropics/claude-code-action`**: GitHub Action ufficiale che analizza i report Lighthouse e applica fix automatiche.
-- **GitHub Actions Integration**: I workflow eseguono auto-fix su problemi di accessibilità e performance.
+- **`anthropics/claude-code-action`**: GitHub Action ufficiale che analizza i report e applica fix automatiche.
+- **Report Generator**: `scripts/vitest-report-generator.mjs` genera report strutturati dai test axe-core.
+- **GitHub Actions Integration**: I workflow eseguono auto-fix su problemi di accessibilità (su PR) o creano Issue (su push).
 - **Configurazione**: Richiede `ANTHROPIC_API_KEY` configurata come GitHub Secret.
 
 ---
@@ -58,13 +59,15 @@ Il sistema utilizza due workflow che si attivano su ogni push/PR verso `main`:
 
 ### 1. Design System Quality & Documentation (`.github/workflows/storybook-tests.yml`)
 ```
-Push/PR → Install → Build Storybook → Test A11y → Lighthouse CI → Deploy (GitHub Pages)
+Push/PR → Install → Test A11y (Vitest + axe-core) → Build Storybook → Deploy (GitHub Pages)
+         ↓ (se test falliscono)
+         Claude Auto-Fix → Push fix (su PR) / Crea Issue (su push)
 ```
 
 **Step:**
-1. **Build Storybook** — genera la build statica
-2. **Test accessibilita** — axe-core via `@storybook/test-runner` (WCAG 2.1 AA)
-3. **Lighthouse CI** — performance, accessibility, best practices
+1. **Test accessibilità** — `@storybook/addon-vitest` + axe-core (WCAG 2.1 AA)
+2. **Auto-Fix** — Claude analizza i fallimenti e propone fix automatiche
+3. **Build Storybook** — genera la build statica (solo su main)
 4. **Deploy** — pubblica su GitHub Pages (solo push su main, dopo che tutti i test passano)
 
 ### 2. Web App Quality & Release (`.github/workflows/app-tests.yml`)
@@ -96,7 +99,7 @@ L'autore del commit riceve la notifica automaticamente.
 - `yarn dev`: Avvia l'app Next.js.
 - `yarn storybook`: Avvia l'ambiente di documentazione a http://localhost:6006.
 - `yarn build-storybook`: Build statico di Storybook.
-- `yarn test-storybook`: Esegue i test funzionali sulle stories.
-- `yarn test-storybook:ci`: Test in CI (avvia server + test runner).
+- `yarn test`: Esegue i test di accessibilità con Vitest + axe-core.
+- `yarn test --watch`: Test in watch mode per lo sviluppo.
 - `yarn lhci`: Esegue Lighthouse CI localmente.
 - `yarn lint` / `yarn check`: Controlli di qualita.

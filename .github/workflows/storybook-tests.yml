@@ -1,5 +1,5 @@
 # Storybook Accessibility Tests & GitHub Pages Deploy
-# - Test a11y tramite @storybook/test-runner (axe-core)
+# - Test a11y tramite @storybook/addon-vitest (axe-core)
 # - Auto-fix con Claude Code quando i test falliscono
 # - Deploy su GitHub Pages solo da main
 
@@ -48,23 +48,19 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # Playwright e' necessario per @storybook/test-runner
+      # Playwright necessario per @vitest/browser-playwright
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Build Storybook
-        run: yarn build-storybook
-        env:
-          CI: true
-
-      # Test di accessibilita' con @storybook/test-runner
+      # Test di accessibilita' con @storybook/addon-vitest
       # Usa axe-core per validare WCAG 2.1 AA compliance
+      # a11y.test: 'error' in CI mode (vedi .storybook/preview.ts)
       - name: Run accessibility tests
         id: a11y
         run: |
-          yarn test-storybook:ci --json --outputFile=axe-results.json 2>&1 | tee axe-output.txt || true
+          yarn test 2>&1 | tee vitest-output.txt || true
           # Check if tests actually failed
-          if grep -q "failed" axe-results.json 2>/dev/null || grep -q "✕" axe-output.txt; then
+          if grep -q "FAIL" vitest-output.txt || grep -q "failed" vitest-output.txt; then
             echo "outcome=failure" >> $GITHUB_OUTPUT
           else
             echo "outcome=success" >> $GITHUB_OUTPUT
@@ -73,19 +69,21 @@ jobs:
           CI: true
         continue-on-error: true
 
+      - name: Build Storybook
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: yarn build-storybook
+        env:
+          CI: true
+
       # Genera report strutturato per auto-fix system
       - name: Generate Accessibility Report
         if: steps.a11y.outputs.outcome == 'failure'
         id: report
         run: |
-          # Try JSON first, fallback to text output
-          if [ -f axe-results.json ]; then
-            node scripts/axe-report-generator.mjs axe-results.json axe-report.json axe-issue.md || true
-          else
-            node scripts/axe-report-generator.mjs axe-output.txt axe-report.json axe-issue.md || true
-          fi
-          if [ -f axe-report.json ]; then
-            FAILURE_COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('axe-report.json')).summary.totalFailures)")
+          # Parse vitest output to generate report
+          node scripts/vitest-report-generator.mjs vitest-output.txt vitest-report.json vitest-issue.md || true
+          if [ -f vitest-report.json ]; then
+            FAILURE_COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('vitest-report.json')).summary.totalFailures)")
             echo "failure_count=$FAILURE_COUNT" >> $GITHUB_OUTPUT
             echo "has_report=true" >> $GITHUB_OUTPUT
           else
@@ -97,12 +95,11 @@ jobs:
         if: steps.a11y.outputs.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: axe-accessibility-report
+          name: vitest-accessibility-report
           path: |
-            axe-report.json
-            axe-issue.md
-            axe-results.json
-            axe-output.txt
+            vitest-report.json
+            vitest-issue.md
+            vitest-output.txt
 
       # Auto-fix con Claude - analizza report e propone fix
       # NOTA: claude-code-action supporta solo pull_request, non push
@@ -113,7 +110,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            Leggi il file axe-issue.md che contiene un report di test di accessibilità falliti nel Design System (Storybook).
+            Leggi il file vitest-issue.md che contiene un report di test di accessibilità falliti nel Design System (Storybook con Vitest).
 
             Per ogni problema:
             1. Trova il file sorgente coinvolto
@@ -125,6 +122,7 @@ jobs:
             - Non tradurre i testi italiani
             - Fix minimali, non riscrivere componenti interi
             - Usa i token del design system (.context/design-system.md)
+            - Problemi comuni: ariaLabel prop non applicato al DOM, contrasto colori insufficiente
           claude_args: |
             --allowedTools "Read,Edit,Bash(yarn build),Bash(yarn lint)"
             --max-turns 15
@@ -144,7 +142,7 @@ jobs:
             git config user.email "claude-code[bot]@users.noreply.github.com"
             git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
             git add -A
-            git commit -m "fix: auto-fix axe-core accessibility issues
+            git commit -m "fix: auto-fix vitest accessibility issues
 
             Co-Authored-By: Claude <noreply@anthropic.com>"
             git push origin ${{ github.head_ref }}
@@ -161,20 +159,20 @@ jobs:
             const fs = require('fs');
 
             // Leggi il contenuto generato
-            if (!fs.existsSync('axe-issue.md')) {
+            if (!fs.existsSync('vitest-issue.md')) {
               console.log('No issue content generated');
               return;
             }
 
-            const issueContent = fs.readFileSync('axe-issue.md', 'utf8');
-            const reportData = JSON.parse(fs.readFileSync('axe-report.json', 'utf8'));
+            const issueContent = fs.readFileSync('vitest-issue.md', 'utf8');
+            const reportData = JSON.parse(fs.readFileSync('vitest-report.json', 'utf8'));
 
             // Chiudi issue auto-fix precedenti
             const existingIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: 'axe-core,auto-fix'
+              labels: 'vitest,auto-fix'
             });
 
             for (const issue of existingIssues.data) {
@@ -194,7 +192,7 @@ jobs:
             }
 
             // Crea nuova issue
-            const title = `[Axe-Core Auto-Fix] ${reportData.summary.totalFailures} accessibility test(s) failed in Design System`;
+            const title = `[Vitest A11y] ${reportData.summary.totalFailures} accessibility test(s) failed in Design System`;
             const body = issueContent.replace(/^#.*\n\n/, '') +
               `\n\n---\n**Commit**: ${context.sha}\n**Workflow**: [Run #${context.runNumber}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`;
 
@@ -203,7 +201,7 @@ jobs:
               repo: context.repo.repo,
               title: title,
               body: body,
-              labels: ['accessibility', 'axe-core', 'auto-fix', 'claude'],
+              labels: ['accessibility', 'vitest', 'auto-fix', 'claude'],
               assignees: [context.actor]  // Assegna a chi ha fatto il commit
             });
 
@@ -215,7 +213,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
-              body: `## Axe-Core - Accessibility tests failed\n\nCreated auto-fix issue: #${issue.number}\n\n**Quick fix with Claude Code:**\n\`\`\`bash\ngh issue view ${issue.number} | claude\n\`\`\``
+              body: `## Vitest A11y - Accessibility tests failed\n\nCreated auto-fix issue: #${issue.number}\n\n**Quick fix with Claude Code:**\n\`\`\`bash\ngh issue view ${issue.number} | claude\n\`\`\``
             });
 
       # Commenta il commit con i risultati (fallback se issue non creata)
@@ -228,7 +226,7 @@ jobs:
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
             const body = [
-              `## Axe-Core - Accessibility tests failed`,
+              `## Vitest A11y - Accessibility tests failed`,
               ``,
               `Il commit \`${sha.substring(0, 7)}\` non supera i test di accessibilità.`,
               ``,
