@@ -113,8 +113,9 @@ jobs:
             .lighthouseci/*.json
 
       # Auto-fix con Claude - analizza report e propone fix
+      # NOTA: claude-code-action supporta solo pull_request, non push
       - name: Auto-Fix with Claude
-        if: steps.lhci.outcome == 'failure' && steps.report.outputs.has_report == 'true'
+        if: steps.lhci.outcome == 'failure' && steps.report.outputs.has_report == 'true' && github.event_name == 'pull_request'
         id: autofix
         uses: anthropics/claude-code-action@v1
         with:
