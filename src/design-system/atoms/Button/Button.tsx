@@ -63,10 +63,10 @@ const baseStyles = [
  */
 const variantStyles: Record<ButtonVariant, string> = {
   primary: [
-    'bg-[var(--color-primary-500)] text-white',
+    'bg-[var(--color-primary-500)] text-white/40', // REGRESSIONE A11Y: contrasto insufficiente
     'hover:bg-[var(--color-primary-600)]',
     'active:bg-[var(--color-primary-700)]',
-    'focus-visible:ring-[var(--color-primary-500)] focus-visible:ring-offset-white',
+    // REGRESSIONE A11Y: rimosso focus-visible ring
   ].join(' '),
 
   secondary: [
