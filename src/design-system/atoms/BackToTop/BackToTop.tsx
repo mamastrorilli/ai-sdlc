@@ -117,6 +117,7 @@ export const BackToTop = forwardRef<HTMLButtonElement, BackToTopProps>(
         type="button"
         className={buttonClasses}
         onClick={handleClick}
+        aria-label={ariaLabel}
         data-duration={duration}
         {...props}
       >

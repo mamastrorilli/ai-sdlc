@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-02-11T17:49:55.360Z",
+  "source": "vitest (@storybook/addon-vitest)",
+  "summary": {
+    "totalFailures": 1,
+    "totalViolations": 0,
+    "byCategory": {},
+    "byComponent": {
+      "src/design-system/atoms/BackToTop/BackToTop.tsx": 1
+    },
+    "byRule": {}
+  },
+  "failures": [
+    {
+      "testName": "Unknown",
+      "storyFile": "src/design-system/atoms/BackToTop/BackToTop.stories.tsx",
+      "filePath": "src/design-system/atoms/BackToTop/BackToTop.tsx",
+      "errorMessage": "",
+      "issueType": "unknown",
+      "expectedName": null,
+      "htmlSnippet": "<button\n    class=\"fixed bottom-6 right-6 z-[var(--z-fixed)] rounded-full flex items-center justify-center transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-primary-500)] opacity-0 scale-75 pointer-events-none bg-[#CCCCCC] text-[#AAAAAA] hover:bg-[#BBBBBB] active:bg-[#AAAAAA] w-12 h-12\"\n    data-duration=\"800\"\n    type=\"button\"\n  />\n\n  --------------------------------------------------\n\nIgnored nodes: comments, script, style\n<div>\n  <div\n    style=\"min-height: 200px; padding: 2rem; position: relative;\"\n  >\n    <button\n      class=\"fixed bottom-6 right-6 z-[var(--z-fixed)] rounded-full flex items-center justify-center transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-primary-500)] opacity-0 scale-75 pointer-events-none bg-[#CCCCCC] text-[#AAAAAA] hover:bg-[#BBBBBB] active:bg-[#AAAAAA] w-12 h-12\"\n      data-duration=\"800\"\n      type=\"button\"\n    >\n      <svg\n        aria-hidden=\"true\"\n        class=\"lucide lucide-arrow-up w-5 h-5\"\n        fill=\"none\"\n        height=\"20\"\n        stroke=\"currentColor\"\n        stroke-linecap=\"round\"\n        stroke-linejoin=\"round\"\n        stroke-width=\"2\"\n        viewBox=\"0 0 24 24\"\n        width=\"20\"\n        xmlns=\"http://www.w3.org/2000/svg\"\n      >\n        <path\n          d=\"m5 12 7-7 7 7\"\n        />\n        <path\n          d=\"M12 19V5\"\n        />\n      </svg>\n    </button>",
+      "fixSuggestions": null
+    }
+  ],
+  "designSystemContext": {
+    "tokensPath": "src/design-system/tokens/",
+    "contrastRules": ".context/design-system.md"
+  }
+}
