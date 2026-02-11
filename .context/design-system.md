@@ -320,6 +320,46 @@ Registro dei componenti migrati da Figma.
 
 ### Atoms
 
+#### BackToTop
+Pulsante fisso "Torna su" che appare durante lo scroll e riporta l'utente in cima alla pagina.
+
+**File**: `src/design-system/atoms/BackToTop/BackToTop.tsx`
+**Storybook**: `Atoms/BackToTop`
+
+**Props**:
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `variant` | `'light' \| 'dark'` | `'light'` | Variante colore |
+| `size` | `'md' \| 'sm'` | `'md'` | Dimensione pulsante |
+| `shadow` | `boolean` | `false` | Mostra ombra |
+| `scrollLimit` | `number` | `100` | Soglia scroll in px per mostrare il pulsante |
+| `duration` | `number` | `800` | Durata animazione scroll ms |
+| `ariaLabel` | `string` | `'Torna su'` | Label per accessibilità |
+
+**Varianti**:
+- `light`: Sfondo primary blu (#0066CC), icona bianca
+- `dark`: Sfondo bianco, icona scura - per sfondi colorati
+
+**Dimensioni**:
+| Size | Classe | Descrizione |
+|------|--------|-------------|
+| md | `w-12 h-12` | Default |
+| sm | `w-9 h-9` | Compatto |
+
+**Utilizzo**:
+```tsx
+import { BackToTop } from '@/design-system/atoms';
+
+// Default
+<BackToTop />
+
+// Dark su sfondo colorato
+<BackToTop variant="dark" shadow />
+
+// Compatto con soglia custom
+<BackToTop size="sm" scrollLimit={200} />
+```
+
 #### Button
 Componente bottone conforme UI Kit Italia.
 

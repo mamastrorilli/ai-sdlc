@@ -1,7 +1,7 @@
 'use client';
 import { Github, Linkedin, BookOpen, FileCode } from 'lucide-react';
 import { Hero, Footer } from '@/design-system/organisms';
-import { Accordion, type AccordionItemData } from '@/design-system/atoms';
+import { Accordion, BackToTop, type AccordionItemData } from '@/design-system/atoms';
 import type { FooterColumn } from '@/design-system/organisms';
 import type { SocialLinkItem } from '@/design-system/molecules';
 
@@ -277,6 +277,9 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* Back to Top */}
+      <BackToTop />
 
       {/* Footer */}
       <Footer
