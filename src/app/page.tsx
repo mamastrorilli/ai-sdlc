@@ -13,20 +13,25 @@ const faqItems: AccordionItemData[] = [
       <div className="space-y-3">
         <p>
           Il progetto implementa un Design System basato sulla metodologia{' '}
-          <strong>Atomic Design</strong>, organizzando i componenti in livelli:
+          <strong>Atomic Design</strong>, organizzando i componenti in livelli
+          crescenti di complessità:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>
-            <strong>Atoms</strong>: Button, Icon, Link, Accordion
+            <strong>Atoms</strong>: Accordion, BackToTop, Button, Divider, Icon,
+            Link, Logo
           </li>
           <li>
-            <strong>Organisms</strong>: Hero
+            <strong>Molecules</strong>: LinkGroup, SocialLinks
+          </li>
+          <li>
+            <strong>Organisms</strong>: Footer, Hero
           </li>
         </ul>
         <p>
-          I componenti seguono le linee guida del{' '}
-          <strong>UI Kit Italia</strong> per garantire accessibilità e coerenza
-          visiva.
+          Tutti i componenti seguono le linee guida del{' '}
+          <strong>UI Kit Italia</strong> (Figma Community) per accessibilità
+          WCAG 2.1 AA e coerenza visiva.
         </p>
       </div>
     ),
@@ -38,131 +43,414 @@ const faqItems: AccordionItemData[] = [
       <div className="space-y-3">
         <p>
           I token di design sono estratti dal{' '}
-          <strong>Figma UI Kit Italia</strong> e includono:
+          <strong>Figma UI Kit Italia</strong> e centralizzati in{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            tokens/
+          </code>
+          . Nessun valore HEX è mai hardcodato nei componenti.
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>
-            <strong>Colors</strong>: Primary (#0066CC), Accent, Success,
-            Warning, Error, Info, Neutral
+            <strong>Colors</strong>: Primary (#0066CC), Accent (#00A3A3),
+            Success, Warning, Error, Info + scala Neutral completa
           </li>
           <li>
-            <strong>Typography</strong>: Font Titillium Web con scale tipografiche
-            standardizzate
+            <strong>Typography</strong>: Titillium Web con 12 livelli di
+            dimensione (xs → 9xl) e 5 pesi (300–700)
           </li>
           <li>
-            <strong>Spacing</strong>: Sistema basato su unità di 4px
+            <strong>Spacing</strong>: Sistema 4px con gap semantici, border
+            radius, container widths e z-index scale
           </li>
         </ul>
-      </div>
-    ),
-  },
-  {
-    id: 'storybook',
-    title: 'Storybook con Play Functions',
-    content: (
-      <div className="space-y-3">
         <p>
-          Ogni componente ha una <strong>story Storybook</strong> con:
-        </p>
-        <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>Varianti principali documentate</li>
-          <li>
-            <strong>Play functions</strong> per test di interazione automatizzati
-          </li>
-          <li>Test di accessibilità integrati con axe-core</li>
-        </ul>
-        <p>
-          Comando: <code className="bg-neutral-100 px-2 py-1 rounded">yarn storybook</code>
+          Ogni token è esposto come CSS custom property (es.{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            var(--color-primary-500)
+          </code>
+          ) e classe Tailwind.
         </p>
       </div>
     ),
   },
   {
-    id: 'ci-cd',
-    title: 'CI/CD con GitHub Actions',
+    id: 'contesto-vivo',
+    title: 'Contesto Vivo — AI-Aware Codebase',
     content: (
       <div className="space-y-3">
         <p>
-          Pipeline automatizzata su ogni push/PR verso <strong>main</strong>:
+          Il <strong>Contesto Vivo</strong> è il principio cardine del progetto:
+          la documentazione non è un artefatto separato, ma{' '}
+          <strong>parte integrante del codice</strong> che si aggiorna
+          automaticamente ad ogni modifica.
         </p>
-        <ol className="list-decimal list-inside space-y-1 ml-2">
-          <li>Install dependencies con yarn</li>
-          <li>Build Storybook statico</li>
-          <li>Test accessibilità (WCAG 2.1 AA) con axe-core</li>
-          <li>Lighthouse CI per performance e accessibility score</li>
-          <li>Deploy automatico su GitHub Pages</li>
+        <p>Come funziona:</p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>
+            <strong>CLAUDE.md</strong> (root): istruzioni di progetto lette
+            automaticamente da Claude Code e altri AI IDE ad ogni sessione
+          </li>
+          <li>
+            <strong>.context/design-system.md</strong>: registro completo di
+            token, componenti, props e varianti — aggiornato ad ogni nuova
+            componente
+          </li>
+          <li>
+            <strong>Storybook stories</strong>: documentazione visiva e
+            interattiva con play functions per test automatici
+          </li>
+        </ul>
+        <p>
+          Quando un AI agent (Claude Code, Cursor, Copilot) apre il progetto,
+          ha immediatamente il contesto completo: sa quali componenti esistono,
+          quali token usare e quali regole rispettare. Questo elimina
+          l&apos;allucinazione e garantisce coerenza.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'mcp',
+    title: 'MCP — Model Context Protocol',
+    content: (
+      <div className="space-y-3">
+        <p>
+          <strong>MCP (Model Context Protocol)</strong> è uno standard aperto
+          creato da Anthropic che definisce come i modelli AI comunicano con
+          strumenti e dati esterni. Funziona come una{' '}
+          <strong>&quot;USB-C per l&apos;AI&quot;</strong>: un singolo protocollo
+          standardizzato che sostituisce integrazioni custom per ogni servizio.
+        </p>
+        <p>
+          L&apos;architettura è client-server: l&apos;AI IDE (es. Claude Code)
+          è il <strong>client MCP</strong>, che si connette a uno o più{' '}
+          <strong>server MCP</strong>. Ogni server espone &quot;tools&quot;
+          tipizzati che il modello può invocare autonomamente durante la
+          conversazione.
+        </p>
+        <p>In questo progetto, i server MCP configurati sono:</p>
+        <ul className="list-disc list-inside space-y-2 ml-2">
+          <li>
+            <strong>Figma MCP Server</strong>: Claude Code si connette
+            direttamente al file Figma del UI Kit Italia. Può leggere nodi,
+            estrarre proprietà (colori, spacing, tipografia), ispezionare
+            varianti di un componente e generare codice React + TypeScript
+            pixel-perfect — senza che lo sviluppatore debba copiare/incollare
+            specifiche dal Dev Mode
+          </li>
+          <li>
+            <strong>GitHub MCP Server</strong>: permette all&apos;AI di creare
+            issue, aprire PR, commentare code review e leggere lo stato delle
+            pipeline CI — tutto dalla stessa conversazione in cui si scrive
+            codice
+          </li>
+          <li>
+            <strong>File System MCP</strong>: accesso strutturato in
+            lettura/scrittura al codebase locale, usato per aggiornare
+            automaticamente{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              .context/design-system.md
+            </code>
+            ,{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              CLAUDE.md
+            </code>{' '}
+            e le Storybook stories quando viene aggiunto un nuovo componente
+          </li>
+        </ul>
+        <p>
+          Il vantaggio rispetto al prompting tradizionale: l&apos;AI non lavora
+          su descrizioni testuali approssimative, ma ha{' '}
+          <strong>accesso diretto ai dati reali</strong> (il file Figma, il repo
+          GitHub, il filesystem). Questo riduce drasticamente errori,
+          allucinazioni e il bisogno di iterazioni manuali.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'pipeline-design-system',
+    title: 'Pipeline — Design System (Storybook)',
+    content: (
+      <div className="space-y-3">
+        <p>
+          La pipeline{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            storybook-tests.yml
+          </code>{' '}
+          valida la qualità del Design System ad ogni push o PR verso{' '}
+          <strong>main</strong>, <strong>dev</strong> e <strong>test</strong>.
+          È progettata per garantire che ogni componente sia accessibile prima
+          di raggiungere la produzione.
+        </p>
+        <p className="font-semibold">Flusso completo:</p>
+        <ol className="list-decimal list-inside space-y-2 ml-2">
+          <li>
+            <strong>Setup</strong>: install dependencies con{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              yarn --frozen-lockfile
+            </code>{' '}
+            + installazione browser Playwright (Chromium) per i test in-browser
+          </li>
+          <li>
+            <strong>Test accessibilità</strong>: Vitest esegue tutti i test
+            delle Storybook stories tramite{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              @storybook/addon-vitest
+            </code>
+            . Ogni story viene renderizzata in un browser reale (Playwright) e
+            validata con <strong>axe-core</strong> per WCAG 2.1 AA: contrasto,
+            ARIA, semantica HTML, focus management
+          </li>
+          <li>
+            <strong>Report</strong>: se i test falliscono, uno script genera un
+            report strutturato (JSON + Markdown) con i dettagli di ogni
+            violazione, i file coinvolti e le regole WCAG violate
+          </li>
+          <li>
+            <strong>Auto-Fix (solo PR)</strong>: il report viene passato a un
+            agente{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              anthropics/claude-code-action
+            </code>{' '}
+            che analizza le violazioni, trova i file sorgente, applica fix
+            minimali e pusha il commit sulla branch della PR
+          </li>
+          <li>
+            <strong>Issue (push diretto)</strong>: se il push è diretto (non
+            PR), l&apos;auto-fix non è disponibile — viene creata una GitHub
+            Issue con il report completo, label{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              accessibility, vitest, auto-fix
+            </code>{' '}
+            e assegnata all&apos;autore del commit
+          </li>
+          <li>
+            <strong>Deploy (solo main)</strong>: se tutti i test passano e siamo
+            su main, viene eseguito{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              yarn build-storybook
+            </code>{' '}
+            e il risultato viene deployato su <strong>GitHub Pages</strong> come
+            documentazione pubblica del Design System
+          </li>
         </ol>
       </div>
     ),
   },
   {
-    id: 'lighthouse',
-    title: 'Lighthouse CI con Soglie',
+    id: 'pipeline-web-app',
+    title: 'Pipeline — Web App (Lighthouse)',
     content: (
       <div className="space-y-3">
         <p>
-          Controlli automatici di qualità con <strong>Lighthouse CI</strong>:
+          La pipeline{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            app-tests.yml
+          </code>{' '}
+          valida la qualità della Web App Next.js. A differenza della pipeline
+          Storybook che testa componenti isolati, questa esegue{' '}
+          <strong>Lighthouse User Flow</strong> su pagine reali, simulando la
+          navigazione di un utente.
         </p>
-        <table className="w-full text-sm border-collapse">
+        <p className="font-semibold">Flusso completo:</p>
+        <ol className="list-decimal list-inside space-y-2 ml-2">
+          <li>
+            <strong>Build &amp; Start</strong>:{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              yarn build
+            </code>{' '}
+            compila l&apos;app Next.js, poi{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              yarn start
+            </code>{' '}
+            avvia il server di produzione su porta 3000
+          </li>
+          <li>
+            <strong>Lighthouse User Flow</strong>: uno script Node.js esegue
+            Lighthouse in modalità User Flow — naviga le pagine, misura
+            performance, accessibilità e best practices con metriche reali
+            (non synthetic)
+          </li>
+          <li>
+            <strong>Report</strong>: se le soglie non vengono raggiunte, viene
+            generato un report strutturato con le violazioni specifiche e i
+            punteggi per metrica
+          </li>
+          <li>
+            <strong>Auto-Fix (solo PR)</strong>: stesso meccanismo della
+            pipeline Storybook — Claude Code analizza il report Lighthouse,
+            identifica i file da correggere e pusha le fix sulla branch
+          </li>
+          <li>
+            <strong>Issue (push diretto)</strong>: GitHub Issue automatica con
+            label{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              lighthouse, auto-fix, web-app
+            </code>
+          </li>
+          <li>
+            <strong>Deploy (solo main)</strong>: se tutto passa, deploy
+            automatico su <strong>Vercel</strong> in produzione tramite Vercel
+            CLI
+          </li>
+        </ol>
+        <p className="font-semibold mt-2">Soglie di qualità:</p>
+        <table className="w-full text-sm border-collapse mt-1">
           <thead>
             <tr className="border-b">
               <th className="text-left py-2">Metrica</th>
               <th className="text-left py-2">Soglia</th>
-              <th className="text-left py-2">Livello</th>
+              <th className="text-left py-2">Effetto</th>
             </tr>
           </thead>
           <tbody>
             <tr className="border-b">
-              <td className="py-2">Performance</td>
-              <td className="py-2">&gt;= 90%</td>
-              <td className="py-2">Warning</td>
-            </tr>
-            <tr className="border-b">
               <td className="py-2">Accessibility</td>
               <td className="py-2">&gt;= 95%</td>
-              <td className="py-2 text-red-600 font-semibold">Blocca</td>
+              <td className="py-2 font-semibold" style={{ color: 'var(--color-error-500)' }}>
+                Blocca il deploy
+              </td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2">Performance</td>
+              <td className="py-2">&gt;= 90%</td>
+              <td className="py-2" style={{ color: 'var(--color-warning-500)' }}>
+                Warning (non blocca)
+              </td>
             </tr>
             <tr>
               <td className="py-2">Best Practices</td>
               <td className="py-2">&gt;= 90%</td>
-              <td className="py-2">Warning</td>
+              <td className="py-2" style={{ color: 'var(--color-warning-500)' }}>
+                Warning (non blocca)
+              </td>
             </tr>
           </tbody>
         </table>
+        <p className="text-sm mt-2" style={{ color: 'var(--color-neutral-500)' }}>
+          Le run concorrenti sulla stessa branch vengono automaticamente
+          cancellate per risparmiare risorse CI.
+        </p>
       </div>
     ),
   },
   {
-    id: 'figma-workflow',
-    title: 'Figma MCP Workflow',
+    id: 'autofix-agent',
+    title: 'Auto-Fix Agent — Claude Code in CI',
     content: (
       <div className="space-y-3">
         <p>
-          Integrazione <strong>Figma Dev Mode → Claude Code</strong>:
+          Quando un test di accessibilità fallisce in CI, un{' '}
+          <strong>agente Claude Code</strong> interviene automaticamente tramite{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            anthropics/claude-code-action
+          </code>
+          :
+        </p>
+        <ol className="list-decimal list-inside space-y-2 ml-2">
+          <li>
+            Legge il <strong>report strutturato</strong> generato dalla pipeline
+            (axe-core o Lighthouse)
+          </li>
+          <li>
+            Identifica i file sorgente coinvolti nel codebase
+          </li>
+          <li>
+            Applica <strong>fix minimali</strong> di accessibilità (ARIA
+            attributes, contrasto colori, semantic HTML)
+          </li>
+          <li>
+            Verifica che il progetto compili con{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              yarn build
+            </code>
+          </li>
+          <li>
+            Committa e pusha le fix sulla branch della PR
+          </li>
+        </ol>
+        <p>
+          Se l&apos;auto-fix non riesce o siamo su push diretto (non PR), viene
+          creata una <strong>GitHub Issue</strong> con il report completo e
+          assegnata all&apos;autore del commit. Requisito:{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            ANTHROPIC_API_KEY
+          </code>{' '}
+          nei secrets del repository.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'storybook',
+    title: 'Storybook — Documentazione Interattiva',
+    content: (
+      <div className="space-y-3">
+        <p>
+          Ogni componente del Design System ha una{' '}
+          <strong>story Storybook</strong> dedicata con:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>Estrazione automatica di componenti da Figma</li>
-          <li>Generazione di codice React + TypeScript</li>
-          <li>Auto-update della documentazione (CLAUDE.md, design-system.md)</li>
-          <li>Creazione automatica di Storybook stories</li>
+          <li>
+            Tutte le <strong>varianti</strong> documentate e navigabili
+          </li>
+          <li>
+            <strong>Play functions</strong> per test di interazione automatizzati
+            (click, keyboard, focus)
+          </li>
+          <li>
+            Test di accessibilità <strong>axe-core</strong> integrati via{' '}
+            <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+              @storybook/addon-vitest
+            </code>
+          </li>
+          <li>
+            Controlli interattivi per provare props in tempo reale
+          </li>
         </ul>
+        <p>
+          Comandi:{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            yarn storybook
+          </code>{' '}
+          (dev) |{' '}
+          <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
+            yarn build-storybook
+          </code>{' '}
+          (build statico)
+        </p>
       </div>
     ),
   },
   {
     id: 'accessibility',
-    title: 'Accessibilità (WCAG 2.1 AA)',
+    title: 'Accessibilità — WCAG 2.1 AA',
     content: (
       <div className="space-y-3">
         <p>
-          L&apos;accessibilità è una priorità core del progetto:
+          L&apos;accessibilità è un requisito <strong>bloccante</strong>, non
+          opzionale:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>Test automatici con axe-core su ogni componente</li>
-          <li>Soglia Lighthouse Accessibility al 95% (bloccante)</li>
-          <li>Focus management e keyboard navigation</li>
-          <li>ARIA attributes e semantic HTML</li>
-          <li>Contrasto colori conforme WCAG AA</li>
+          <li>
+            Test automatici <strong>axe-core</strong> su ogni story Storybook
+            (via Vitest)
+          </li>
+          <li>
+            Soglia Lighthouse Accessibility al <strong>95%</strong> — fallimento
+            = build bloccata
+          </li>
+          <li>Focus management e keyboard navigation su tutti i componenti</li>
+          <li>ARIA attributes e semantic HTML obbligatori</li>
+          <li>
+            Contrasto colori conforme WCAG AA — no opacità ridotte su sfondi
+            colorati
+          </li>
+          <li>
+            <strong>Auto-fix AI</strong> in CI per correggere regressioni
+            automaticamente
+          </li>
         </ul>
       </div>
     ),
@@ -174,13 +462,13 @@ const faqItems: AccordionItemData[] = [
       <div className="space-y-3">
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>
-            <strong>Framework</strong>: Next.js 14 (App Router)
+            <strong>Framework</strong>: Next.js (App Router)
           </li>
           <li>
             <strong>Linguaggio</strong>: TypeScript
           </li>
           <li>
-            <strong>Styling</strong>: Tailwind CSS
+            <strong>Styling</strong>: Tailwind CSS v4
           </li>
           <li>
             <strong>Icons</strong>: Lucide React
@@ -189,10 +477,19 @@ const faqItems: AccordionItemData[] = [
             <strong>Documentation</strong>: Storybook 8
           </li>
           <li>
-            <strong>Package Manager</strong>: Yarn
+            <strong>Testing</strong>: Vitest + Playwright + axe-core
           </li>
           <li>
-            <strong>CI/CD</strong>: GitHub Actions
+            <strong>CI/CD</strong>: GitHub Actions + Vercel + GitHub Pages
+          </li>
+          <li>
+            <strong>AI Agent</strong>: Claude Code (sviluppo + auto-fix CI)
+          </li>
+          <li>
+            <strong>Design Source</strong>: Figma UI Kit Italia (via MCP)
+          </li>
+          <li>
+            <strong>Package Manager</strong>: Yarn
           </li>
         </ul>
       </div>
