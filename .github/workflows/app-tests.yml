@@ -1,3 +1,8 @@
+# Web App Quality, Accessibility & Production Release
+# - Analisi Lighthouse User Flow (Accessibility + Performance)
+# - Auto-fix con Claude Code quando vengono rilevati problemi di accessibilita'
+# - Deploy automatico su Vercel (Production) solo da main
+
 name: Web App Quality & Release
 
 on:
@@ -12,6 +17,11 @@ permissions:
   pull-requests: write
   issues: write
   id-token: write
+
+# Cancella run precedenti sulla stessa branch per risparmiare risorse
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lighthouse-check:
@@ -37,6 +47,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # Esegue l'analisi Lighthouse simulando un flusso utente tipico
+      # Richiede che l'app sia buildata e servita localmente
       - name: Run Lighthouse User Flow
         id: lighthouse
         run: |
@@ -46,7 +58,7 @@ jobs:
           node scripts/lighthouse-flow.mjs
         continue-on-error: true
 
-      # Genera report strutturato per auto-fix system
+      # Genera report strutturato per l'auto-fix system basato sui risultati Lighthouse
       - name: Generate Flow Report
         if: steps.lighthouse.outcome == 'failure'
         id: report
@@ -60,6 +72,7 @@ jobs:
             echo "has_report=false" >> $GITHUB_OUTPUT
           fi
 
+      # Carica i report Lighthouse come artifact per analisi manuale
       - name: Upload Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -71,7 +84,7 @@ jobs:
             flow-report.json
             flow-issue.md
 
-      # Auto-fix con Claude - analizza report e propone fix
+      # Auto-fix con Claude - analizza il report e applica fix direttamente nel codice
       # NOTA: claude-code-action supporta solo pull_request, non push
       - name: Auto-Fix with Claude
         if: steps.lighthouse.outcome == 'failure' && steps.report.outputs.has_report == 'true' && github.event_name == 'pull_request'
@@ -96,7 +109,7 @@ jobs:
             --max-turns 15
         continue-on-error: true
 
-      # Committa e pusha le fix (solo su PR, dove Claude auto-fix può girare)
+      # Committa e pusha le fix suggerite da Claude (solo su PR)
       - name: Commit and Push Auto-Fix
         if: github.event_name == 'pull_request'
         id: check_fixes
@@ -118,7 +131,7 @@ jobs:
             echo "has_fixes=true" >> $GITHUB_OUTPUT
           fi
 
-      # Crea GitHub Issue per fix manuale (solo su push, dove Claude auto-fix non può girare)
+      # Crea una GitHub Issue per fix manuale se i test falliscono su branch protette (push)
       - name: Create GitHub Issue for Manual Fix
         if: steps.lighthouse.outcome == 'failure' && github.event_name == 'push' && steps.report.outputs.has_report == 'true'
         uses: actions/github-script@v7
@@ -152,7 +165,7 @@ jobs:
               });
             }
 
-            // Crea nuova issue
+            // Crea nuova issue con i dettagli del fallimento
             const title = `[Lighthouse Auto-Fix] User Flow - ${reportData.summary.totalIssues} issue(s) in Web App`;
             const body = issueContent.replace(/^#.*\n\n/, '') +
               `\n\n---\n**Commit**: ${context.sha}\n**Workflow**: [Run #${context.runNumber}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`;
@@ -173,6 +186,7 @@ jobs:
         if: steps.lighthouse.outcome == 'failure'
         run: exit 1
 
+  # Deploy su Vercel in produzione, avviene solo se i controlli Lighthouse passano
   deploy-production:
     name: Deploy to Vercel (Production)
     needs: lighthouse-check
