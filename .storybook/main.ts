@@ -1,3 +1,8 @@
+/**
+ * Configurazione principale di Storybook.
+ * Definisce dove trovare le story, quali addon caricare (a11y, docs, vitest, ecc.)
+ * e il framework utilizzato (Next.js con Vite) per il design system.
+ */
 import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 const config: StorybookConfig = {

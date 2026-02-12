@@ -1,7 +1,8 @@
-# Storybook Accessibility Tests & GitHub Pages Deploy
-# - Test a11y tramite @storybook/addon-vitest (axe-core)
-# - Auto-fix con Claude Code quando i test falliscono
-# - Deploy su GitHub Pages solo da main
+# Pipeline di Qualità per il Design System.
+# Gestisce il ciclo di vita dei componenti atomici:
+# 1. Test di Accessibilità: Usa Vitest e axe-core per validare ogni story di Storybook.
+# 2. Auto-Fix con Claude: Identifica componenti non accessibili e propone fix automatiche nel codice.
+# 3. GitHub Pages Deploy: Pubblica la documentazione aggiornata di Storybook (Design System) su web.
 
 name: Design System Quality & Documentation
 

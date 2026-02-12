@@ -1,3 +1,9 @@
+# Pipeline CI/CD principale per la Web Application.
+# Esegue i seguenti passaggi:
+# 1. Lighthouse User Flow: Verifica performance ed accessibilità delle pagine principali.
+# 2. Auto-Fix con Claude: Analizza i report Lighthouse e applica automaticamente correzioni per l'accessibilità.
+# 3. Deploy su Vercel: Se i test passano e siamo sul branch main, esegue il deploy in produzione.
+
 name: Web App Quality & Release
 
 on:

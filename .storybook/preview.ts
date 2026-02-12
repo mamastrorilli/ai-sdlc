@@ -1,3 +1,8 @@
+/**
+ * Configurazione del rendering delle story in Storybook.
+ * Gestisce i parametri globali, i decoratori (come gli stili CSS globali) 
+ * e le impostazioni degli addon, come il controllo dell'accessibilità.
+ */
 import type { Preview } from '@storybook/nextjs-vite';
 import '../src/app/globals.css';
 

@@ -1,3 +1,9 @@
+/**
+ * Configurazione di Lighthouse CI (LHCI).
+ * Questo file definisce come Lighthouse deve analizzare il progetto per Performance ed Accessibilità.
+ * Utilizza la build statica di Storybook per testare i singoli componenti in isolamento,
+ * garantendo che ogni atomo, molecola o organismo rispetti gli standard definiti.
+ */
 /** @type {import('@lhci/cli').LighthouseConfig} */
 module.exports = {
   ci: {
