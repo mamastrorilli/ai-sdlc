@@ -204,7 +204,7 @@ const faqItems: AccordionItemData[] = [
   },
   {
     id: 'agentic-workflows',
-    title: 'Agentic Workflows: L&apos;AI come Collaboratore Autonomo',
+    title: 'Agentic Workflows: L\'AI come Collaboratore Autonomo',
     content: (
       <div className="space-y-4">
         <p>
