@@ -12,21 +12,13 @@ const faqItems: AccordionItemData[] = [
     content: (
       <div className="space-y-3">
         <p>
-          Il progetto implementa un Design System basato sulla metodologia{' '}
-          <strong>Atomic Design</strong>, organizzando i componenti in livelli:
+          Il progetto implementa un Design System robusto basato sulla metodologia{' '}
+          <strong>Atomic Design</strong>. Questa architettura permette una scalabilità eccellente attraverso la scomposizione dell&apos;interfaccia in elementi modulari, riutilizzabili e gerarchici.
         </p>
-        <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>
-            <strong>Atoms</strong>: Button, Icon, Link, Accordion
-          </li>
-          <li>
-            <strong>Organisms</strong>: Hero
-          </li>
-        </ul>
         <p>
-          I componenti seguono le linee guida del{' '}
-          <strong>UI Kit Italia</strong> per garantire accessibilità e coerenza
-          visiva.
+          I componenti sono stati sviluppati seguendo rigorosamente le linee guida del{' '}
+          <strong>UI Kit Italia</strong> per garantire accessibilità nativa (WCAG 2.1 AA) e coerenza
+          visiva con gli standard di design di riferimento.
         </p>
       </div>
     ),
@@ -79,19 +71,28 @@ const faqItems: AccordionItemData[] = [
   },
   {
     id: 'ci-cd',
-    title: 'CI/CD con GitHub Actions',
+    title: 'GitHub Actions: AI-Driven Pipeline',
     content: (
       <div className="space-y-3">
         <p>
-          Pipeline automatizzata su ogni push/PR verso <strong>main</strong>:
+          Il progetto utilizza due pipeline principali che integrano l&apos;AI per garantire la qualità:
         </p>
-        <ol className="list-decimal list-inside space-y-1 ml-2">
-          <li>Install dependencies con yarn</li>
-          <li>Build Storybook statico</li>
-          <li>Test accessibilità (WCAG 2.1 AA) con axe-core</li>
-          <li>Lighthouse CI per performance e accessibility score</li>
-          <li>Deploy automatico su GitHub Pages</li>
-        </ol>
+        <div className="space-y-2">
+          <p><strong>1. Web App Quality & Release:</strong></p>
+          <ul className="list-disc list-inside space-y-1 ml-2">
+            <li>Analisi <strong>Lighthouse User Flow</strong> (Performance & Accessibility).</li>
+            <li><strong>Claude Auto-Fix</strong>: risponde ai fallimenti Lighthouse applicando fix automatiche su PR.</li>
+            <li>Deploy continuo su <strong>Vercel Production</strong> (solo se i test passano).</li>
+          </ul>
+          
+          <p><strong>2. Design System Quality:</strong></p>
+          <ul className="list-disc list-inside space-y-1 ml-2">
+            <li>Test di accessibilità con <strong>Vitest & axe-core</strong> su ogni story.</li>
+            <li><strong>Claude Auto-Fix</strong>: corregge errori di contrasto o ARIA nei componenti.</li>
+            <li>Generazione automatica di <strong>GitHub Issues</strong> per fix manuali su push falliti.</li>
+            <li>Deploy automatico della documentazione su <strong>GitHub Pages</strong>.</li>
+          </ul>
+        </div>
       </div>
     ),
   },
@@ -174,27 +175,60 @@ const faqItems: AccordionItemData[] = [
       <div className="space-y-3">
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>
-            <strong>Framework</strong>: Next.js 14 (App Router)
+            <strong>Frontend</strong>: Next.js 16 (App Router) con React 19
           </li>
           <li>
-            <strong>Linguaggio</strong>: TypeScript
+            <strong>Linguaggio</strong>: TypeScript 5
           </li>
           <li>
-            <strong>Styling</strong>: Tailwind CSS
+            <strong>Styling</strong>: Tailwind CSS 4 (Engine moderno v4)
+          </li>
+          <li>
+            <strong>Testing</strong>: Vitest con Playwright Browser Testing
+          </li>
+          <li>
+            <strong>Documentation</strong>: Storybook 10 con Play functions
           </li>
           <li>
             <strong>Icons</strong>: Lucide React
           </li>
           <li>
-            <strong>Documentation</strong>: Storybook 8
-          </li>
-          <li>
             <strong>Package Manager</strong>: Yarn
           </li>
           <li>
-            <strong>CI/CD</strong>: GitHub Actions
+            <strong>CI/CD</strong>: GitHub Actions & Lighthouse CI
           </li>
         </ul>
+      </div>
+    ),
+  },
+  {
+    id: 'agentic-workflows',
+    title: 'Agentic Workflows: L&apos;AI come Collaboratore Autonomo',
+    content: (
+      <div className="space-y-4">
+        <p>
+          Un <strong>Agentic Workflow</strong> rappresenta un salto evolutivo rispetto alla semplice automazione: l&apos;AI non si limita a generare codice, ma agisce come un <strong>agente autonomo</strong> capace di ragionare, utilizzare strumenti e correggersi iterativamente.
+        </p>
+        
+        <div className="bg-[var(--color-neutral-50)] p-4 rounded-lg border border-[var(--color-neutral-200)] italic text-sm text-[var(--color-neutral-700)]">
+          &quot;L&apos;agente osserva lo stato del sistema (test falliti, log), ragiona sulla causa radice, pianifica una soluzione ed esegue modifiche usando tool reali, verificando il risultato in un ciclo continuo.&quot;
+        </div>
+
+        <div className="space-y-2">
+          <p><strong>Integrazione nel Progetto:</strong></p>
+          <ul className="list-disc list-inside space-y-2 ml-2">
+            <li>
+              <strong>Antigravity (IDE Agent)</strong>: Integrato direttamente nel workspace, Antigravity utilizza tool di sistema per navigare il codice, eseguire test locali e orchestrare i workflow definiti in <code>.agent/workflows</code>, agendo come un vero programmatore nel team.
+            </li>
+            <li>
+              <strong>Claude Code Action (CI Agent)</strong>: Nelle GitHub Actions, l&apos;agente riceve i report di errore da Lighthouse o Vitest. Non propone una soluzione statica, ma &quot;entra&quot; nel codice della PR, individua il bug, applica una fix e valida che la build passi prima di sottomettere le modifiche.
+            </li>
+            <li>
+              <strong>Tool-Use & Decision Making</strong>: Grazie alle <em>capabilities</em> di tool-use, i modelli possono eseguire comandi terminale, leggere la struttura delle directory e manipolare i file, riducendo drasticamente il task switching per gli sviluppatori.
+            </li>
+          </ul>
+        </div>
       </div>
     ),
   },
