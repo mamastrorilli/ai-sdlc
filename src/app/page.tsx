@@ -13,7 +13,7 @@ const faqItems: AccordionItemData[] = [
       <div className="space-y-3">
         <p>
           Il progetto implementa un Design System robusto basato sulla metodologia{' '}
-          <strong>Atomic Design</strong>. Questa architettura permette una scalabilità eccellente attraverso la scomposizione dell&apos;interfaccia in elementi modulari, riutilizzabili e gerarchici.
+          <strong>Atomic Design</strong>. Questa architettura permette una scalabilità eccellente attraverso la scomposizione dell'interfaccia in elementi modulari, riutilizzabili e gerarchici.
         </p>
         <p>
           I componenti sono stati sviluppati seguendo rigorosamente le linee guida del{' '}
@@ -75,7 +75,7 @@ const faqItems: AccordionItemData[] = [
     content: (
       <div className="space-y-3">
         <p>
-          Il progetto utilizza due pipeline principali che integrano l&apos;AI per garantire la qualità:
+          Il progetto utilizza due pipeline principali che integrano l'AI per garantire la qualità:
         </p>
         <div className="space-y-2">
           <p><strong>1. Web App Quality & Release:</strong></p>
@@ -156,7 +156,7 @@ const faqItems: AccordionItemData[] = [
     content: (
       <div className="space-y-3">
         <p>
-          L&apos;accessibilità è una priorità core del progetto:
+          L'accessibilità è una priorità core del progetto:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Test automatici con axe-core su ogni componente</li>
@@ -208,11 +208,11 @@ const faqItems: AccordionItemData[] = [
     content: (
       <div className="space-y-4">
         <p>
-          Un <strong>Agentic Workflow</strong> rappresenta un salto evolutivo rispetto alla semplice automazione: l&apos;AI non si limita a generare codice, ma agisce come un <strong>agente autonomo</strong> capace di ragionare, utilizzare strumenti e correggersi iterativamente.
+          Un <strong>Agentic Workflow</strong> rappresenta un salto evolutivo rispetto alla semplice automazione: l'AI non si limita a generare codice, ma agisce come un <strong>agente autonomo</strong> capace di ragionare, utilizzare strumenti e correggersi iterativamente.
         </p>
         
         <div className="bg-[var(--color-neutral-50)] p-4 rounded-lg border border-[var(--color-neutral-200)] italic text-sm text-[var(--color-neutral-700)]">
-          &quot;L&apos;agente osserva lo stato del sistema (test falliti, log), ragiona sulla causa radice, pianifica una soluzione ed esegue modifiche usando tool reali, verificando il risultato in un ciclo continuo.&quot;
+          &quot;L'agente osserva lo stato del sistema (test falliti, log), ragiona sulla causa radice, pianifica una soluzione ed esegue modifiche usando tool reali, verificando il risultato in un ciclo continuo.&quot;
         </div>
 
         <div className="space-y-2">
@@ -222,7 +222,7 @@ const faqItems: AccordionItemData[] = [
               <strong>Antigravity (IDE Agent)</strong>: Integrato direttamente nel workspace, Antigravity utilizza tool di sistema per navigare il codice, eseguire test locali e orchestrare i workflow definiti in <code>.agent/workflows</code>, agendo come un vero programmatore nel team.
             </li>
             <li>
-              <strong>Claude Code Action (CI Agent)</strong>: Nelle GitHub Actions, l&apos;agente riceve i report di errore da Lighthouse o Vitest. Non propone una soluzione statica, ma &quot;entra&quot; nel codice della PR, individua il bug, applica una fix e valida che la build passi prima di sottomettere le modifiche.
+              <strong>Claude Code Action (CI Agent)</strong>: Nelle GitHub Actions, l'agente riceve i report di errore da Lighthouse o Vitest. Non propone una soluzione statica, ma &quot;entra&quot; nel codice della PR, individua il bug, applica una fix e valida che la build passi prima di sottomettere le modifiche.
             </li>
             <li>
               <strong>Tool-Use & Decision Making</strong>: Grazie alle <em>capabilities</em> di tool-use, i modelli possono eseguire comandi terminale, leggere la struttura delle directory e manipolare i file, riducendo drasticamente il task switching per gli sviluppatori.
