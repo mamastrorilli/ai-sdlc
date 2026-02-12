@@ -71,8 +71,8 @@ graph TD
     C -->|Successo| G[Build Storybook]
     G --> H[Deploy GitHub Pages]
     
-    style E fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#dfd,stroke:#333
+    style E fill:#6366f1,stroke:#4338ca,stroke-width:2px,color:#fff
+    style F fill:#10b981,stroke:#047857,color:#fff
 ```
 
 **Step chiave:**
@@ -94,8 +94,8 @@ graph TD
     F --> A
     C -->|Successo| G[Deploy Vercel]
     
-    style E fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#dfd,stroke:#333
+    style E fill:#6366f1,stroke:#4338ca,stroke-width:2px,color:#fff
+    style F fill:#10b981,stroke:#047857,color:#fff
 ```
 
 **Step chiave:**
