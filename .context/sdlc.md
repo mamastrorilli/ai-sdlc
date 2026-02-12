@@ -63,7 +63,6 @@ Sistema automatizzato per rilevare e risolvere problemi di accessibilità/perfor
 
 | File | Scopo |
 |------|-------|
-| `scripts/lighthouse-report-generator.mjs` | Parsa LHCI results, mappa Story → File, genera JSON/MD |
 | `scripts/lighthouse-flow-report.mjs` | Parsa User Flow results per web app |
 | `.github/workflows/storybook-tests.yml` | Pipeline Design System + Issue creation |
 | `.github/workflows/app-tests.yml` | Pipeline Web App + Issue creation |
