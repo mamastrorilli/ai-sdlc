@@ -45,6 +45,11 @@ lighthouse-report/
 flow-report.json
 flow-issue.md
 
+# vitest reports
+vitest-report.json
+vitest-output.txt
+vitest-issue.md
+
 .claude
 .claude/settings.local.json
 

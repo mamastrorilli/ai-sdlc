@@ -92,7 +92,7 @@ Fonte: [UI Kit Italia](https://www.figma.com/design/qMgiC0CQiPCSGo8B03CiC0/UI-Ki
 
 | Livello | Componenti | Path |
 |---------|------------|------|
-| Atoms | Button, Icon, Link, Accordion, Divider, Logo | `src/design-system/atoms/` |
+| Atoms | Accordion, BackToTop, Button, Divider, Icon, Link, Logo | `src/design-system/atoms/` |
 | Molecules | LinkGroup, SocialLinks | `src/design-system/molecules/` |
 | Organisms | Footer, Hero | `src/design-system/organisms/` |
 

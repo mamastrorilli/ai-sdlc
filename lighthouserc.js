@@ -1,3 +1,9 @@
+/**
+ * Configurazione di Lighthouse CI (LHCI).
+ * Questo file definisce come Lighthouse deve analizzare il progetto per Performance ed Accessibilità.
+ * Utilizza la build statica di Storybook per testare i singoli componenti in isolamento,
+ * garantendo che ogni atomo, molecola o organismo rispetti gli standard definiti.
+ */
 /** @type {import('@lhci/cli').LighthouseConfig} */
 module.exports = {
   ci: {
@@ -11,6 +17,7 @@ module.exports = {
       url: [
         // Atoms
         'http://localhost/iframe.html?id=atoms-accordion--basic',
+        'http://localhost/iframe.html?id=atoms-back-to-top--default',
         'http://localhost/iframe.html?id=atoms-button--primary',
         'http://localhost/iframe.html?id=atoms-button--secondary',
         'http://localhost/iframe.html?id=atoms-divider--default',

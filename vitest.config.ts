@@ -1,3 +1,8 @@
+/**
+ * Configurazione di Vitest per i test unitari e di componenti.
+ * È configurato per utilizzare Playwright come browser runner per eseguire i test 
+ * di accessibilità (axe-core) sulle story di Storybook in modo automatizzato.
+ */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 

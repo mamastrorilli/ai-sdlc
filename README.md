@@ -53,31 +53,55 @@ Il progetto è progettato per questo flusso di lavoro:
 
 ---
 
-## 🔄 CI/CD Pipeline (GitHub Actions)
+## 🔄 CI/CD Pipeline (AI-Powered)
 
-Il sistema utilizza due workflow che si attivano su ogni push/PR verso `main`:
+Il sistema utilizza due pipeline automatizzate che integrano l'Intelligenza Artificiale per garantire la qualità del codice.
 
-### 1. Design System Quality & Documentation (`.github/workflows/storybook-tests.yml`)
+### 1. Design System Workflow (`storybook-tests.yml`)
+Gestisce la documentazione e l'accessibilità dei componenti atomici.
+
+```mermaid
+graph TD
+    A[Push / PR] --> B[Install & Build]
+    B --> C{Test A11y <br/>Vitest + axe-core}
+    C -->|Fallimento| D[Script: Report Generator]
+    D --> E[Claude AI Auto-Fix]
+    E -->|Applica Fix| F[Nuovo Commit Automcompute]
+    F --> A
+    C -->|Successo| G[Build Storybook]
+    G --> H[Deploy GitHub Pages]
+    
+    style E fill:#6366f1,stroke:#4338ca,stroke-width:2px,color:#fff
+    style F fill:#10b981,stroke:#047857,color:#fff
 ```
-Push/PR → Install → Test A11y (Vitest + axe-core) → Build Storybook → Deploy (GitHub Pages)
-         ↓ (se test falliscono)
-         Claude Auto-Fix → Push fix (su PR) / Crea Issue (su push)
-```
 
-**Step:**
+**Step chiave:**
 1. **Test accessibilità** — `@storybook/addon-vitest` + axe-core (WCAG 2.1 AA)
 2. **Auto-Fix** — Claude analizza i fallimenti e propone fix automatiche
 3. **Build Storybook** — genera la build statica (solo su main)
 4. **Deploy** — pubblica su GitHub Pages (solo push su main, dopo che tutti i test passano)
 
-### 2. Web App Quality & Release (`.github/workflows/app-tests.yml`)
-```
-Push/PR → Install → Build App → Lighthouse User Flow → Deploy (Vercel)
+### 2. Web App Workflow (`app-tests.yml`)
+Gestisce la qualità dell'esperienza utente finale e il rilascio in produzione.
+
+```mermaid
+graph TD
+    A[Push / PR] --> B[Build & Start App]
+    B --> C{Lighthouse <br/>User Flow}
+    C -->|Fallimento| D[Script: Flow Report]
+    D --> E[Claude AI Auto-Fix]
+    E -->|Applica Fix| F[Nuovo Commit Automcompute]
+    F --> A
+    C -->|Successo| G[Deploy Vercel]
+    
+    style E fill:#6366f1,stroke:#4338ca,stroke-width:2px,color:#fff
+    style F fill:#10b981,stroke:#047857,color:#fff
 ```
 
-**Step:**
+**Step chiave:**
 1. **Lighthouse User Flow** — esegue script di navigazione utente per metriche performance/a11y (`yarn build` + `yarn start`)
-2. **Deploy Production** — pubblica su Vercel (solo push su main, dopo Lighthouse ok)
+2. **Auto-Fix** — Claude analizza i problemi rilevati da Lighthouse e corregge il codice
+3. **Deploy Production** — pubblica su Vercel (solo push su main, dopo Lighthouse ok)
 
 ### Notifiche automatiche
 Se Lighthouse CI rileva problemi, viene creato un **commento sul commit** GitHub con:

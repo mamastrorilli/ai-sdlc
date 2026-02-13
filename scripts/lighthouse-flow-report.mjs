@@ -29,7 +29,7 @@ const PAGE_COMPONENT_MAP = {
 };
 
 /**
- * WCAG audit suggestions (shared with lighthouse-report-generator.mjs)
+ * Suggerimenti per le violazioni WCAG
  */
 const WCAG_FIX_SUGGESTIONS = {
   'color-contrast': {

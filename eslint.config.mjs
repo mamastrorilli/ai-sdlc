@@ -1,3 +1,9 @@
+/**
+ * Configurazione di ESLint per il progetto.
+ * Utilizza il nuovo "Flat Config Format" per definire le regole di linting.
+ * Integra le regole standard di Next.js (Core Web Vitals e TypeScript) 
+ * e le regole specifiche per Storybook per garantire la qualità del codice.
+ */
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import storybook from "eslint-plugin-storybook";
 

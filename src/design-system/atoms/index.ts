@@ -1,4 +1,5 @@
 export { Accordion, type AccordionProps, type AccordionVariant, type AccordionItemData } from './Accordion';
+export { BackToTop, type BackToTopProps, type BackToTopVariant, type BackToTopSize } from './BackToTop';
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './Button';
 export { Divider, type DividerProps, type DividerOrientation, type DividerVariant } from './Divider';
 export { Icon, type IconProps, type IconSize } from './Icon';
