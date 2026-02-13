@@ -104,7 +104,7 @@ const faqItems: AccordionItemData[] = [
           Quando un AI agent (Claude Code, Cursor, Copilot) apre il progetto,
           ha immediatamente il contesto completo: sa quali componenti esistono,
           quali token usare e quali regole rispettare. Questo elimina
-          l&apos;allucinazione e garantisce coerenza.
+          l\'allucinazione e garantisce coerenza.
         </p>
       </div>
     ),
@@ -118,11 +118,11 @@ const faqItems: AccordionItemData[] = [
           <strong>MCP (Model Context Protocol)</strong> è uno standard aperto
           creato da Anthropic che definisce come i modelli AI comunicano con
           strumenti e dati esterni. Funziona come una{' '}
-          <strong>&quot;USB-C per l&apos;AI&quot;</strong>: un singolo protocollo
+          <strong>&quot;USB-C per l\'AI&quot;</strong>: un singolo protocollo
           standardizzato che sostituisce integrazioni custom per ogni servizio.
         </p>
         <p>
-          L&apos;architettura è client-server: l&apos;AI IDE (es. Claude Code)
+          L\'architettura è client-server: l\'AI IDE (es. Claude Code)
           è il <strong>client MCP</strong>, che si connette a uno o più{' '}
           <strong>server MCP</strong>. Ogni server espone &quot;tools&quot;
           tipizzati che il modello può invocare autonomamente durante la
@@ -139,7 +139,7 @@ const faqItems: AccordionItemData[] = [
             specifiche dal Dev Mode
           </li>
           <li>
-            <strong>GitHub MCP Server</strong>: permette all&apos;AI di creare
+            <strong>GitHub MCP Server</strong>: permette all\'AI di creare
             issue, aprire PR, commentare code review e leggere lo stato delle
             pipeline CI — tutto dalla stessa conversazione in cui si scrive
             codice
@@ -159,7 +159,7 @@ const faqItems: AccordionItemData[] = [
           </li>
         </ul>
         <p>
-          Il vantaggio rispetto al prompting tradizionale: l&apos;AI non lavora
+          Il vantaggio rispetto al prompting tradizionale: l\'AI non lavora
           su descrizioni testuali approssimative, ma ha{' '}
           <strong>accesso diretto ai dati reali</strong> (il file Figma, il repo
           GitHub, il filesystem). Questo riduce drasticamente errori,
@@ -218,12 +218,12 @@ const faqItems: AccordionItemData[] = [
           </li>
           <li>
             <strong>Issue (push diretto)</strong>: se il push è diretto (non
-            PR), l&apos;auto-fix non è disponibile — viene creata una GitHub
+            PR), l\'auto-fix non è disponibile — viene creata una GitHub
             Issue con il report completo, label{' '}
             <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
               accessibility, vitest, auto-fix
             </code>{' '}
-            e assegnata all&apos;autore del commit
+            e assegnata all\'autore del commit
           </li>
           <li>
             <strong>Deploy (solo main)</strong>: se tutti i test passano e siamo
@@ -260,7 +260,7 @@ const faqItems: AccordionItemData[] = [
             <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
               yarn build
             </code>{' '}
-            compila l&apos;app Next.js, poi{' '}
+            compila l\'app Next.js, poi{' '}
             <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
               yarn start
             </code>{' '}
@@ -371,9 +371,9 @@ const faqItems: AccordionItemData[] = [
           </li>
         </ol>
         <p>
-          Se l&apos;auto-fix non riesce o siamo su push diretto (non PR), viene
+          Se l\'auto-fix non riesce o siamo su push diretto (non PR), viene
           creata una <strong>GitHub Issue</strong> con il report completo e
-          assegnata all&apos;autore del commit. Requisito:{' '}
+          assegnata all\'autore del commit. Requisito:{' '}
           <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
             ANTHROPIC_API_KEY
           </code>{' '}
@@ -429,7 +429,7 @@ const faqItems: AccordionItemData[] = [
     content: (
       <div className="space-y-3">
         <p>
-          L&apos;accessibilità è un requisito <strong>bloccante</strong>, non
+          L\'accessibilità è un requisito <strong>bloccante</strong>, non
           opzionale:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
@@ -465,7 +465,7 @@ const faqItems: AccordionItemData[] = [
             <strong>Framework</strong>: Next.js (App Router)
           </li>
           <li>
-            <strong>Linguaggio</strong>: TypeScript
+            <strong>Linguaggio</strong>: TypeScript 5
           </li>
           <li>
             <strong>Styling</strong>: Tailwind CSS v4
@@ -492,6 +492,36 @@ const faqItems: AccordionItemData[] = [
             <strong>Package Manager</strong>: Yarn
           </li>
         </ul>
+      </div>
+    ),
+  },
+  {
+    id: 'agentic-workflows',
+    title: 'Agentic Workflows: L\'AI come Collaboratore Autonomo',
+    content: (
+      <div className="space-y-4">
+        <p>
+          Un <strong>Agentic Workflow</strong> rappresenta un salto evolutivo rispetto alla semplice automazione: l'AI non si limita a generare codice, ma agisce come un <strong>agente autonomo</strong> capace di ragionare, utilizzare strumenti e correggersi iterativamente.
+        </p>
+        
+        <div className="bg-[var(--color-neutral-50)] p-4 rounded-lg border border-[var(--color-neutral-200)] italic text-sm text-[var(--color-neutral-700)]">
+          &quot;L'agente osserva lo stato del sistema (test falliti, log), ragiona sulla causa radice, pianifica una soluzione ed esegue modifiche usando tool reali, verificando il risultato in un ciclo continuo.&quot;
+        </div>
+
+        <div className="space-y-2">
+          <p><strong>Integrazione nel Progetto:</strong></p>
+          <ul className="list-disc list-inside space-y-2 ml-2">
+            <li>
+              <strong>Antigravity (IDE Agent)</strong>: Integrato direttamente nel workspace, Antigravity utilizza tool di sistema per navigare il codice, eseguire test locali e orchestrare i workflow definiti in <code>.agent/workflows</code>, agendo come un vero programmatore nel team.
+            </li>
+            <li>
+              <strong>Claude Code Action (CI Agent)</strong>: Nelle GitHub Actions, l'agente riceve i report di errore da Lighthouse o Vitest. Non propone una soluzione statica, ma &quot;entra&quot; nel codice della PR, individua il bug, applica una fix e valida che la build passi prima di sottomettere le modifiche.
+            </li>
+            <li>
+              <strong>Tool-Use & Decision Making</strong>: Grazie alle <em>capabilities</em> di tool-use, i modelli possono eseguire comandi terminale, leggere la struttura delle directory e manipolare i file, riducendo drasticamente il task switching per gli sviluppatori.
+            </li>
+          </ul>
+        </div>
       </div>
     ),
   },
